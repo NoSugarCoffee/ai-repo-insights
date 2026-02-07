@@ -16,7 +16,6 @@ go.work
 data/trending_raw/*.json
 data/stars_raw/*.json
 data/summaries/*.json
-data/history.json
 
 # IDE
 .vscode/
@@ -32,3 +31,5 @@ Thumbs.db
 # Environment
 .env
 .env.local
+
+ai-repo-insights
