@@ -18,9 +18,6 @@ data/stars_raw/*.json
 data/summaries/*.json
 data/history.json
 
-# Reports
-reports/*.md
-
 # IDE
 .vscode/
 .idea/
