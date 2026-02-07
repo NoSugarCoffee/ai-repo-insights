@@ -1,0 +1,11 @@
+{
+  "window_days": 90,
+  "short_window_days": 30,
+  "top_n": 50,
+  "new_repo_threshold_days": 90,
+  "dark_horse_accel_threshold": 100,
+  "cache_ttl_hours": 24,
+  "report_language": "en-US",
+  "report_id_format": "YYYY-MM-weekN",
+  "filter_domain": "Web Frameworks"
+}

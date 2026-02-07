@@ -1,0 +1,10 @@
+{
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "model": "gemini-1.5-pro",
+  "provider": "gemini",
+  "timeout_seconds": 60,
+  "max_retries": 3,
+  "role_description": "GitHub open source project analyst",
+  "output_tone": "concise, analytical, non-promotional",
+  "temperature": 0.7
+}

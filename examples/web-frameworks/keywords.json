@@ -1,0 +1,33 @@
+{
+  "include": [
+    "framework",
+    "web",
+    "frontend",
+    "backend",
+    "fullstack",
+    "react",
+    "vue",
+    "angular",
+    "svelte",
+    "next",
+    "nuxt",
+    "express",
+    "fastapi",
+    "django",
+    "flask"
+  ],
+  "exclude": [
+    "tutorial",
+    "awesome-list",
+    "learning",
+    "course",
+    "template"
+  ],
+  "categories": {
+    "frontend": ["react", "vue", "angular", "svelte", "frontend"],
+    "backend": ["express", "fastapi", "django", "flask", "backend"],
+    "fullstack": ["next", "nuxt", "remix", "fullstack"],
+    "meta-framework": ["next", "nuxt", "astro", "gatsby"],
+    "build-tools": ["vite", "webpack", "rollup", "esbuild"]
+  }
+}

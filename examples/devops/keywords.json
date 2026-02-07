@@ -1,0 +1,29 @@
+{
+  "include": [
+    "devops",
+    "kubernetes",
+    "docker",
+    "ci-cd",
+    "terraform",
+    "ansible",
+    "monitoring",
+    "observability",
+    "infrastructure",
+    "cloud",
+    "deployment",
+    "automation"
+  ],
+  "exclude": [
+    "tutorial",
+    "awesome-list",
+    "learning",
+    "course"
+  ],
+  "categories": {
+    "container": ["docker", "kubernetes", "k8s", "container"],
+    "iac": ["terraform", "ansible", "pulumi", "cloudformation"],
+    "cicd": ["ci-cd", "jenkins", "github-actions", "gitlab-ci"],
+    "monitoring": ["monitoring", "observability", "prometheus", "grafana"],
+    "cloud": ["aws", "azure", "gcp", "cloud"]
+  }
+}

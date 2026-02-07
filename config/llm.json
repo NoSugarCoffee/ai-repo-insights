@@ -1,0 +1,8 @@
+{
+  "base_url": "https://generativelanguage.googleapis.com/v1beta",
+  "model": "gemini-2.5-pro",
+  "provider": "gemini",
+  "role_description": "GitHub open source project analyst",
+  "output_tone": "concise, analytical, non-promotional",
+  "temperature": 0.7
+}

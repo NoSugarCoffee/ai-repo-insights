@@ -1,0 +1,37 @@
+# Binaries
+github-insights
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binaries
+*.test
+*.out
+
+# Go workspace file
+go.work
+
+# Data directories
+data/trending_raw/*.json
+data/stars_raw/*.json
+data/summaries/*.json
+data/history.json
+
+# Reports
+reports/*.md
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local

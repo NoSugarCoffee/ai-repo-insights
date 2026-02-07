@@ -1,0 +1,105 @@
+name: Weekly GitHub Insights Report
+
+on:
+  # Run every Monday at 00:00 UTC
+  schedule:
+    - cron: '0 0 * * 1'
+  
+  # Allow manual triggering
+  workflow_dispatch:
+    inputs:
+      report_id:
+        description: 'Custom report ID (optional)'
+        required: false
+        type: string
+      log_level:
+        description: 'Log level'
+        required: false
+        default: 'info'
+        type: choice
+        options:
+          - debug
+          - info
+          - warn
+          - error
+
+jobs:
+  generate-report:
+    runs-on: ubuntu-latest
+    
+    permissions:
+      contents: write
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Set up Go
+        uses: actions/setup-go@v5
+        with:
+          go-version: '1.21'
+      
+      - name: Cache Go modules
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      
+      - name: Install dependencies
+        run: go mod download
+      
+      - name: Build application
+        run: go build -o ai-repo-insights ./cmd/ai-repo-insights/
+      
+      - name: Create data directories
+        run: |
+          mkdir -p data/trending_raw
+          mkdir -p data/stars_raw
+          mkdir -p data/summaries
+          mkdir -p reports
+      
+      - name: Generate report
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+        run: |
+          if [ -n "${{ github.event.inputs.report_id }}" ]; then
+            ./ai-repo-insights -weekly -report-id "${{ github.event.inputs.report_id }}" -log-level "${{ github.event.inputs.log_level || 'info' }}"
+          else
+            ./ai-repo-insights -weekly -log-level "${{ github.event.inputs.log_level || 'info' }}"
+          fi
+      
+      - name: Commit and push report
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          
+          # Get the report date
+          REPORT_DATE=$(date +%Y-%m-%d)
+          
+          # Add generated files
+          git add reports/
+          git add data/history.json
+          git add data/summaries/
+          
+          # Check if there are changes to commit
+          if git diff --staged --quiet; then
+            echo "No changes to commit"
+          else
+            git commit -m "Add weekly report for $REPORT_DATE"
+            git push
+          fi
+      
+      - name: Upload report as artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: weekly-report
+          path: |
+            reports/*.md
+            data/summaries/*.json
+          retention-days: 90

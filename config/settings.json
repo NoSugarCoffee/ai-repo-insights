@@ -1,0 +1,11 @@
+{
+  "window_days": 30,
+  "short_window_days": 30,
+  "top_n": 50,
+  "new_repo_threshold_days": 30,
+  "dark_horse_accel_threshold": 100,
+  "cache_ttl_hours": 24,
+  "report_language": "zh-CN",
+  "report_id_format": "YYYY-MM-weekN",
+  "filter_domain": "AI"
+}

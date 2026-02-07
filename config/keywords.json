@@ -1,0 +1,30 @@
+{
+  "include": [
+    "ai",
+    "llm",
+    "agent",
+    "gpt",
+    "rag",
+    "langchain",
+    "machine-learning",
+    "deep-learning",
+    "neural",
+    "transformer",
+    "embedding",
+    "vector"
+  ],
+  "exclude": [
+    "tutorial",
+    "awesome",
+    "learning",
+    "course",
+    "book"
+  ],
+  "categories": {
+    "agent": ["agent", "autonomous", "multi-agent", "autogen"],
+    "llm": ["llm", "language-model", "gpt", "claude", "gemini"],
+    "rag": ["rag", "retrieval", "vector-db", "embedding"],
+    "vision": ["vision", "image", "multimodal", "cv"],
+    "infra": ["inference", "serving", "deployment", "optimization"]
+  }
+}
