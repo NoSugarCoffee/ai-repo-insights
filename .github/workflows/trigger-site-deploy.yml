@@ -1,0 +1,32 @@
+name: Trigger Site Deploy on Reports Update
+
+on:
+  push:
+    paths:
+      - 'reports/**'
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+    permissions: {}
+
+    steps:
+      # DEPLOY_TOKEN must be a Personal Access Token with 'repo' scope on the
+      # target repository (NoSugarCoffee/NoSugarCoffee.github.io).
+      # Add it as a repository secret named DEPLOY_TOKEN.
+      # See: https://docs.github.com/en/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens
+      - name: Trigger NoSugarCoffee.github.io deployment
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.DEPLOY_TOKEN }}
+          script: |
+            try {
+              await github.rest.repos.createDispatchEvent({
+                owner: 'NoSugarCoffee',
+                repo: 'NoSugarCoffee.github.io',
+                event_type: 'reports-updated',
+              });
+              console.log('Successfully triggered deployment of NoSugarCoffee.github.io');
+            } catch (error) {
+              core.setFailed(`Failed to trigger deployment: ${error.message}`);
+            }
