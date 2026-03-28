@@ -1,5 +1,7 @@
 # AI Repository Insights
 
+[![gitcgr](https://gitcgr.com/badge/NoSugarCoffee/ai-repo-insights.svg)](https://gitcgr.com/NoSugarCoffee/ai-repo-insights)
+
 An automated analysis platform that tracks, ranks, and reports on trending repositories from GitHub based on configurable filtering criteria.
 
 ## Features
