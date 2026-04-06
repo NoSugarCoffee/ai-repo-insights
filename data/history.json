@@ -1,355 +1,355 @@
 {
-  "latest_report": "2026-03-week14",
+  "latest_report": "2026-04-week15",
   "history": {
-    "AstrBotDevs/AstrBot": {
-      "weeks_in_top": 6,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-02-week9",
-      "first_seen_date": "2026-02-23"
+    "ChromeDevTools/chrome-devtools-mcp": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
     },
-    "Crosstalk-Solutions/project-nomad": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week12",
-      "first_seen_date": "2026-03-16"
+    "Fission-AI/OpenSpec": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
     },
-    "Mintplex-Labs/anything-llm": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week10",
-      "first_seen_date": "2026-03-02"
+    "HKUDS/RAG-Anything": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
     },
     "NousResearch/hermes-agent": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 5,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week11",
       "first_seen_date": "2026-03-09"
     },
-    "OpenBB-finance/OpenBB": {
+    "PaddlePaddle/PaddleOCR": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
     },
     "QuantumNous/new-api": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
-    "SakanaAI/AI-Scientist-v2": {
+    "ResearAI/DeepScientist": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
     },
     "TauricResearch/TradingAgents": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
     },
+    "abhi1693/openclaw-mission-control": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
+    },
     "abhigyanpatwari/GitNexus": {
-      "weeks_in_top": 6,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 7,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-02-week9",
       "first_seen_date": "2026-02-23"
     },
     "affaan-m/everything-claude-code": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
-    },
-    "agentscope-ai/ReMe": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
-    },
-    "agentscope-ai/agentscope": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
-    },
-    "alibaba/OpenSandbox": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week10",
-      "first_seen_date": "2026-03-02"
     },
     "alirezarezvani/claude-skills": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
     },
-    "asheshgoplani/agent-deck": {
-      "weeks_in_top": 6,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-02-week9",
-      "first_seen_date": "2026-02-23"
+    "always-further/nono": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
     },
-    "browser-use/browser-use": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week13",
-      "first_seen_date": "2026-03-23"
+    "antinomyhq/forgecode": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
+    },
+    "badlogic/pi-mono": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
+    },
+    "block/goose": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
+    },
+    "cocoindex-io/cocoindex": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
+    },
+    "code-yeongyu/oh-my-openagent": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
     },
     "coreyhaines31/marketingskills": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week12",
       "first_seen_date": "2026-03-16"
     },
     "decolua/9router": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
     },
     "dmtrKovalenko/fff.nvim": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
     "docker/docker-agent": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week12",
       "first_seen_date": "2026-03-16"
     },
-    "grp06/openclaw-studio": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
-    },
-    "harry0703/MoneyPrinterTurbo": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week13",
-      "first_seen_date": "2026-03-23"
-    },
     "jarrodwatts/claude-hud": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
-    },
-    "jingyaogong/minimind": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
     },
     "langchain-ai/deepagents": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week12",
       "first_seen_date": "2026-03-16"
     },
     "langchain-ai/open-swe": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
     },
     "levnikolaevich/claude-code-skills": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
     },
-    "looplj/axonhub": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
-    },
     "luongnv89/claude-howto": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
-    "max-sixty/worktrunk": {
+    "maximhq/bifrost": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
+    },
+    "memvid/memvid": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
     },
     "microsoft/BitNet": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week12",
       "first_seen_date": "2026-03-16"
     },
     "microsoft/VibeVoice": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
-    "mvanhorn/last30days-skill": {
+    "microsoft/agent-framework": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
+    },
+    "mudler/LocalAI": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
+    },
+    "mvanhorn/last30days-skill": {
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
     "onyx-dot-app/onyx": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
     "openai/codex": {
-      "weeks_in_top": 10,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 11,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-02-week6",
       "first_seen_date": "2026-02-07"
     },
     "pbakaus/impeccable": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 5,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week11",
       "first_seen_date": "2026-03-09"
     },
     "promptfoo/promptfoo": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week12",
-      "first_seen_date": "2026-03-16"
-    },
-    "ruvnet/RuVector": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week12",
       "first_seen_date": "2026-03-16"
     },
     "ruvnet/ruflo": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
     },
-    "smtg-ai/claude-squad": {
+    "screenpipe/screenpipe": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
+    },
+    "smtg-ai/claude-squad": {
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
     "songquanpeng/one-api": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week12",
-      "first_seen_date": "2026-03-16"
-    },
-    "southleft/figma-console-mcp": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week12",
       "first_seen_date": "2026-03-16"
     },
     "supermemoryai/supermemory": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
-    "superset-sh/superset": {
-      "weeks_in_top": 6,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-02-week9",
-      "first_seen_date": "2026-02-23"
-    },
     "teng-lin/notebooklm-py": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week12",
       "first_seen_date": "2026-03-16"
     },
-    "thedotmack/claude-mem": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week13",
-      "first_seen_date": "2026-03-23"
+    "vas3k/TaxHacker": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
+    },
+    "vectorize-io/hindsight": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
     },
     "vercel-labs/agent-browser": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week12",
       "first_seen_date": "2026-03-16"
     },
     "virattt/ai-hedge-fund": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 5,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week11",
       "first_seen_date": "2026-03-09"
-    },
-    "virattt/dexter": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
     },
     "volcengine/OpenViking": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-03-week14",
-      "last_seen_date": "2026-03-30",
+      "weeks_in_top": 5,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
       "first_seen_report": "2026-03-week11",
       "first_seen_date": "2026-03-09"
+    },
+    "vxcontrol/pentagi": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week15",
+      "last_seen_date": "2026-04-06",
+      "first_seen_report": "2026-04-week15",
+      "first_seen_date": "2026-04-06"
     }
   }
 }
