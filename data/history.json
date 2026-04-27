@@ -1,355 +1,355 @@
 {
-  "latest_report": "2026-04-week17",
+  "latest_report": "2026-04-week18",
   "history": {
+    "AIDC-AI/Pixelle-Video": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
+    },
     "Anil-matcha/Open-Generative-AI": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week16",
       "first_seen_date": "2026-04-13"
     },
-    "ChromeDevTools/chrome-devtools-mcp": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week15",
-      "first_seen_date": "2026-04-06"
-    },
-    "Crosstalk-Solutions/project-nomad": {
+    "EricLBuehler/mistral.rs": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week17",
-      "first_seen_date": "2026-04-20"
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     },
     "EvoMap/evolver": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week17",
       "first_seen_date": "2026-04-20"
     },
-    "Fission-AI/OpenSpec": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week15",
-      "first_seen_date": "2026-04-06"
-    },
-    "Gentleman-Programming/engram": {
+    "HKUDS/RAG-Anything": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week17",
-      "first_seen_date": "2026-04-20"
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     },
     "Mintplex-Labs/anything-llm": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week17",
       "first_seen_date": "2026-04-20"
     },
-    "NoFxAiOS/nofx": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week16",
-      "first_seen_date": "2026-04-13"
-    },
     "NousResearch/hermes-agent": {
-      "weeks_in_top": 7,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 8,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week11",
       "first_seen_date": "2026-03-09"
     },
+    "PostHog/posthog": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
+    },
     "QuantumNous/new-api": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 5,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
     "QwenLM/qwen-code": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week17",
       "first_seen_date": "2026-04-20"
     },
     "SakanaAI/AI-Scientist-v2": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week17",
       "first_seen_date": "2026-04-20"
     },
-    "TauricResearch/TradingAgents": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-03-week13",
-      "first_seen_date": "2026-03-23"
+    "TabbyML/tabby": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
+    },
+    "Yeachan-Heo/oh-my-codex": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     },
     "YishenTu/claudian": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week16",
       "first_seen_date": "2026-04-13"
     },
     "aaif-goose/goose": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week16",
       "first_seen_date": "2026-04-13"
     },
+    "abhigyanpatwari/GitNexus": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
+    },
     "affaan-m/everything-claude-code": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 6,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
     },
     "alirezarezvani/claude-skills": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 6,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
     },
-    "always-further/nono": {
+    "anomalyco/opencode": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week17",
-      "first_seen_date": "2026-04-20"
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     },
     "badlogic/pi-mono": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week17",
       "first_seen_date": "2026-04-20"
     },
-    "bradygaster/squad": {
+    "badlogic/pi-skills": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week17",
-      "first_seen_date": "2026-04-20"
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     },
     "coleam00/Archon": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week16",
       "first_seen_date": "2026-04-13"
     },
     "coreyhaines31/marketingskills": {
-      "weeks_in_top": 6,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 7,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week12",
       "first_seen_date": "2026-03-16"
     },
     "decolua/9router": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 6,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
     },
     "diegosouzapw/OmniRoute": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week17",
       "first_seen_date": "2026-04-20"
     },
     "dmtrKovalenko/fff.nvim": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 5,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
-    "gitroomhq/postiz-app": {
+    "hugohe3/ppt-master": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week17",
-      "first_seen_date": "2026-04-20"
-    },
-    "jarrodwatts/claude-hud": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-03-week13",
-      "first_seen_date": "2026-03-23"
-    },
-    "jingyaogong/minimind": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week17",
-      "first_seen_date": "2026-04-20"
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     },
     "jo-inc/camofox-browser": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week16",
       "first_seen_date": "2026-04-13"
     },
-    "kagent-dev/kagent": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+    "lsdefine/GenericAgent": {
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week17",
       "first_seen_date": "2026-04-20"
     },
-    "lsdefine/GenericAgent": {
+    "luongnv89/claude-howto": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week17",
-      "first_seen_date": "2026-04-20"
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     },
     "maximhq/bifrost": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week15",
       "first_seen_date": "2026-04-06"
     },
     "memvid/memvid": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week15",
       "first_seen_date": "2026-04-06"
     },
     "microsoft/VibeVoice": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 5,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
-    "mudler/LocalAI": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week15",
-      "first_seen_date": "2026-04-06"
-    },
     "multica-ai/multica": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week16",
       "first_seen_date": "2026-04-13"
     },
-    "mvanhorn/last30days-skill": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
-    },
     "onyx-dot-app/onyx": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 5,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
     "openai/codex": {
-      "weeks_in_top": 13,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 14,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-02-week6",
       "first_seen_date": "2026-02-07"
     },
+    "openclaw/openclaw": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
+    },
     "pbakaus/impeccable": {
-      "weeks_in_top": 7,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 8,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week11",
       "first_seen_date": "2026-03-09"
     },
-    "ruvnet/ruflo": {
+    "plastic-labs/honcho": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
+    },
+    "qingchencloud/clawpanel": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
+    },
+    "rtk-ai/rtk": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
+    },
+    "ruvnet/ruflo": {
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week17",
       "first_seen_date": "2026-04-20"
     },
-    "screenpipe/screenpipe": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week15",
-      "first_seen_date": "2026-04-06"
-    },
-    "snarktank/ralph": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week16",
-      "first_seen_date": "2026-04-13"
+    "sansan0/TrendRadar": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     },
     "songquanpeng/one-api": {
-      "weeks_in_top": 6,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 7,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week12",
       "first_seen_date": "2026-03-16"
     },
-    "supermemoryai/supermemory": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-03-week14",
-      "first_seen_date": "2026-03-30"
+    "superradcompany/microsandbox": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     },
     "tailcallhq/forgecode": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week16",
       "first_seen_date": "2026-04-13"
     },
     "thedotmack/claude-mem": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-04-week16",
       "first_seen_date": "2026-04-13"
     },
-    "thunderbird/thunderbolt": {
+    "vava-nessa/free-coding-models": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week17",
-      "first_seen_date": "2026-04-20"
-    },
-    "tw93/Kaku": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
-      "first_seen_report": "2026-04-week17",
-      "first_seen_date": "2026-04-20"
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     },
     "virattt/ai-hedge-fund": {
-      "weeks_in_top": 7,
-      "last_seen_report": "2026-04-week17",
-      "last_seen_date": "2026-04-20",
+      "weeks_in_top": 8,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
       "first_seen_report": "2026-03-week11",
       "first_seen_date": "2026-03-09"
+    },
+    "zilliztech/claude-context": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-04-week18",
+      "last_seen_date": "2026-04-27",
+      "first_seen_report": "2026-04-week18",
+      "first_seen_date": "2026-04-27"
     }
   }
 }
