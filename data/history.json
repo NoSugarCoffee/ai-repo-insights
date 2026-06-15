@@ -1,353 +1,353 @@
 {
-  "latest_report": "2026-06-week24",
+  "latest_report": "2026-06-week25",
   "history": {
-    "AIDC-AI/Pixelle-Video": {
-      "weeks_in_top": 7,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-04-week18",
-      "first_seen_date": "2026-04-27"
+    "Andyyyy64/whichllm": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
     "Anil-matcha/Open-Generative-AI": {
-      "weeks_in_top": 9,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 10,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-04-week16",
       "first_seen_date": "2026-04-13"
     },
-    "HKUDS/AI-Trader": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-05-week20",
-      "first_seen_date": "2026-05-11"
+    "Ar9av/obsidian-wiki": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
+    },
+    "BigBodyCobain/Shadowbroker": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
+    },
+    "CopilotKit/CopilotKit": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
+    },
+    "EKKOLearnAI/hermes-studio": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
+    },
+    "FareedKhan-dev/train-llm-from-scratch": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
     "HKUDS/ViMax": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-05-week22",
       "first_seen_date": "2026-05-25"
     },
-    "HKUDS/Vibe-Trading": {
+    "LMCache/LMCache": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week24",
-      "first_seen_date": "2026-06-08"
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
-    "Hmbown/CodeWhale": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week23",
-      "first_seen_date": "2026-06-01"
-    },
-    "NVIDIA-AI-Blueprints/video-search-and-summarization": {
+    "NVIDIA/SkillSpector": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week24",
-      "first_seen_date": "2026-06-08"
-    },
-    "NousResearch/hermes-agent": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week24",
-      "first_seen_date": "2026-06-08"
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
     "Open-LLM-VTuber/Open-LLM-VTuber": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
     "Panniantong/Agent-Reach": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
     "QuantumNous/new-api": {
-      "weeks_in_top": 11,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 12,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-03-week14",
       "first_seen_date": "2026-03-30"
     },
     "RyanCodrai/turbovec": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
     "SillyTavern/SillyTavern": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 6,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-05-week20",
       "first_seen_date": "2026-05-11"
     },
     "Tencent/WeKnora": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 6,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-05-week20",
       "first_seen_date": "2026-05-11"
     },
-    "Zackriya-Solutions/meetily": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-05-week21",
-      "first_seen_date": "2026-05-18"
+    "TencentCloud/TencentDB-Agent-Memory": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
     "a5c-ai/babysitter": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
-    "affaan-m/ECC": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week23",
-      "first_seen_date": "2026-06-01"
+    "aaif-goose/goose": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
-    "bytedance/UI-TARS-desktop": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-05-week20",
-      "first_seen_date": "2026-05-11"
+    "agentgateway/agentgateway": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
+    },
+    "andrewyng/aisuite": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
+    },
+    "asgeirtj/system_prompts_leaks": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
     "can1357/oh-my-pi": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-05-week22",
       "first_seen_date": "2026-05-25"
     },
-    "chenhg5/cc-connect": {
-      "weeks_in_top": 6,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-05-week19",
-      "first_seen_date": "2026-05-04"
-    },
     "chopratejas/headroom": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
     "colbymchenry/codegraph": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-05-week22",
       "first_seen_date": "2026-05-25"
     },
     "decolua/9router": {
-      "weeks_in_top": 12,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 13,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-03-week13",
       "first_seen_date": "2026-03-23"
     },
-    "earendil-works/pi": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-05-week20",
-      "first_seen_date": "2026-05-11"
+    "dmtrKovalenko/fff": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
     "farion1231/cc-switch": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 5,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-05-week21",
       "first_seen_date": "2026-05-18"
     },
     "fathah/hermes-desktop": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week24",
-      "first_seen_date": "2026-06-08"
-    },
-    "garrytan/gbrain": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week24",
-      "first_seen_date": "2026-06-08"
-    },
-    "google/skills": {
       "weeks_in_top": 2,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week23",
-      "first_seen_date": "2026-06-01"
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week24",
+      "first_seen_date": "2026-06-08"
     },
     "harry0703/MoneyPrinterTurbo": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week23",
       "first_seen_date": "2026-06-01"
     },
     "heygen-com/hyperframes": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 5,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-05-week21",
       "first_seen_date": "2026-05-18"
     },
-    "influxdata/telegraf": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-05-week21",
-      "first_seen_date": "2026-05-18"
+    "hugohe3/ppt-master": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
-    "jo-inc/camofox-browser": {
-      "weeks_in_top": 9,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-04-week16",
-      "first_seen_date": "2026-04-13"
+    "kenn-io/agentsview": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
-    "kubernetes-sigs/agent-sandbox": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week23",
-      "first_seen_date": "2026-06-01"
+    "maziyarpanahi/openmed": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
     "microsoft/agent-governance-toolkit": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
     "millionco/react-doctor": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
-    "mvanhorn/cli-printing-press": {
+    "mukul975/Anthropic-Cybersecurity-Skills": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
+    },
+    "mvanhorn/cli-printing-press": {
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
     "mvanhorn/last30days-skill": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
     "nesquena/hermes-webui": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 3,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week23",
       "first_seen_date": "2026-06-01"
     },
     "ogulcancelik/herdr": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
-    "openai/codex": {
-      "weeks_in_top": 20,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-02-week6",
-      "first_seen_date": "2026-02-07"
-    },
-    "outsourc-e/hermes-workspace": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-05-week21",
-      "first_seen_date": "2026-05-18"
+    "pbakaus/impeccable": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
     "presenton/presenton": {
-      "weeks_in_top": 3,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 4,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-05-week22",
       "first_seen_date": "2026-05-25"
     },
     "rohitg00/agentmemory": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 6,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-05-week20",
       "first_seen_date": "2026-05-11"
     },
-    "ryoppippi/ccusage": {
-      "weeks_in_top": 2,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week23",
-      "first_seen_date": "2026-06-01"
+    "safishamsi/graphify": {
+      "weeks_in_top": 1,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
     "stablyai/orca": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
-    "tech-leads-club/agent-skills": {
+    "supermemoryai/supermemory": {
       "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-06-week24",
-      "first_seen_date": "2026-06-08"
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
+      "first_seen_report": "2026-06-week25",
+      "first_seen_date": "2026-06-15"
     },
     "tinyhumansai/openhuman": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     },
-    "xingkongliang/skills-manager": {
-      "weeks_in_top": 4,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
-      "first_seen_report": "2026-05-week21",
-      "first_seen_date": "2026-05-18"
-    },
     "yikart/AiToEarn": {
-      "weeks_in_top": 5,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 6,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-05-week20",
       "first_seen_date": "2026-05-11"
     },
     "yvgude/lean-ctx": {
-      "weeks_in_top": 1,
-      "last_seen_report": "2026-06-week24",
-      "last_seen_date": "2026-06-08",
+      "weeks_in_top": 2,
+      "last_seen_report": "2026-06-week25",
+      "last_seen_date": "2026-06-15",
       "first_seen_report": "2026-06-week24",
       "first_seen_date": "2026-06-08"
     }
