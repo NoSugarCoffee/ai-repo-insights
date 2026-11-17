@@ -48,6 +48,8 @@ type Config struct {
 	Keywords  KeywordConfig `json:"keywords"`
 	Settings  Settings      `json:"settings"`
 	LLM       LLMConfig     `json:"llm"`
+	// WritingGuide is config/writing-guide.md, sent verbatim to the LLM.
+	WritingGuide string `json:"-"`
 }
 
 // Load loads all configuration files from the specified directory
@@ -80,6 +82,16 @@ func Load(configDir string) (*Config, error) {
 		return nil, apperrors.NewConfigError("failed to load llm.json", err)
 	}
 	applyLLMDefaults(&config.LLM)
+
+	guidePath := filepath.Join(configDir, "writing-guide.md")
+	guide, err := os.ReadFile(guidePath)
+	if err != nil {
+		return nil, apperrors.NewConfigError("failed to load writing-guide.md, which the LLM prompt requires", err)
+	}
+	if strings.TrimSpace(string(guide)) == "" {
+		return nil, apperrors.NewConfigError("writing-guide.md is empty; the LLM prompt requires the writing rules", nil)
+	}
+	config.WritingGuide = string(guide)
 
 	return config, nil
 }

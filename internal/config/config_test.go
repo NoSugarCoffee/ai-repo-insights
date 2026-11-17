@@ -96,6 +96,9 @@ func TestDefaultValues(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(tmpDir, "llm.json"), []byte(llmJSON), 0644); err != nil {
 		t.Fatalf("Failed to write llm.json: %v", err)
 	}
+	if err := os.WriteFile(filepath.Join(tmpDir, "writing-guide.md"), []byte("rules"), 0644); err != nil {
+		t.Fatalf("Failed to write writing-guide.md: %v", err)
+	}
 
 	// Load config
 	config, err := Load(tmpDir)
@@ -509,4 +512,36 @@ func containsHelper(s string, substr string) bool {
 		}
 	}
 	return false
+}
+
+func TestConfigRequiresWritingGuide(t *testing.T) {
+	dir := t.TempDir()
+	for _, name := range []string{"languages.json", "keywords.json", "settings.json", "llm.json"} {
+		data, err := os.ReadFile(filepath.Join("../../config", name))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(dir, name), data, 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := Load(dir); err == nil {
+		t.Fatal("expected an error when writing-guide.md is missing")
+	}
+	if err := os.WriteFile(filepath.Join(dir, "writing-guide.md"), []byte("  \n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Load(dir); err == nil {
+		t.Fatal("expected an error when writing-guide.md is empty")
+	}
+}
+
+func TestLoadReadsWritingGuide(t *testing.T) {
+	cfg, err := Load("../../config")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cfg.WritingGuide == "" {
+		t.Fatal("WritingGuide not loaded")
+	}
 }

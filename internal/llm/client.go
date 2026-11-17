@@ -13,8 +13,6 @@ import (
 	"github.com/rs/zerolog"
 
 	"ai-repo-insights/internal/config"
-	apperrors "ai-repo-insights/internal/errors"
-	"ai-repo-insights/internal/models"
 )
 
 // Client interfaces with external LLM API for natural language analysis
@@ -23,6 +21,8 @@ type Client struct {
 	apiKey string
 	client *http.Client
 	logger zerolog.Logger
+	// backoff is the wait before retry attempt n (n >= 1).
+	backoff func(attempt int) time.Duration
 }
 
 // NewClient creates a new LLM client
@@ -34,87 +34,10 @@ func NewClient(cfg config.LLMConfig, apiKey string, logger zerolog.Logger) *Clie
 			Timeout: time.Duration(cfg.TimeoutSeconds) * time.Second,
 		},
 		logger: logger,
+		backoff: func(attempt int) time.Duration {
+			return time.Duration(math.Pow(2, float64(attempt))) * time.Second
+		},
 	}
-}
-
-// GenerateAnalysis calls LLM API to generate report analysis
-func (c *Client) GenerateAnalysis(summary models.SummaryJSON, reportLanguage string) (models.LLMOutput, error) {
-	prompt := c.buildPrompt(summary, reportLanguage)
-
-	c.logger.Info().Msg("calling LLM API for analysis")
-
-	responseText, err := c.callAPIWithRetry(prompt)
-	if err != nil {
-		return models.LLMOutput{}, apperrors.NewLLMError("failed to call LLM API after retries", err)
-	}
-
-	output, err := c.parseResponse(responseText)
-	if err != nil {
-		return models.LLMOutput{}, apperrors.NewLLMError("failed to parse LLM response", err)
-	}
-
-	c.logger.Info().Msg("LLM analysis completed successfully")
-	return output, nil
-}
-
-// buildPrompt constructs prompt with role, data, and instructions
-func (c *Client) buildPrompt(summary models.SummaryJSON, reportLanguage string) string {
-	summaryJSON, _ := json.MarshalIndent(summary, "", "  ")
-
-	prompt := fmt.Sprintf(`Role: %s
-
-Task: Analyze the following GitHub repository trending data and provide insights in %s.
-
-Data:
-%s
-
-Instructions:
-1. Write a brief introduction (2-3 sentences) summarizing the overall trends
-2. For each category, provide 1-2 sentences of analytical commentary
-3. Comment on dark horse projects (high score)
-4. Comment on repeater projects (consecutive appearances)
-5. Select 3-5 highlight repositories and provide specific insights for each
-6. Maintain a %s tone
-7. Do NOT fabricate numbers - only interpret the provided data
-8. Output valid JSON in this structure:
-{
-  "intro": "...",
-  "category_notes": {"category_name": "..."},
-  "dark_horse_notes": "...",
-  "repeaters_notes": "...",
-  "highlights": [
-    {"repo": "owner/repo", "comment": "...", "tone": "neutral-analytical"}
-  ]
-}`,
-		c.config.RoleDescription,
-		reportLanguage,
-		string(summaryJSON),
-		c.config.OutputTone,
-	)
-
-	return prompt
-}
-
-// parseResponse parses LLM response into structured format
-func (c *Client) parseResponse(responseText string) (models.LLMOutput, error) {
-	var output models.LLMOutput
-
-	// Clean response text - remove markdown code blocks if present
-	cleanedText := cleanJSONResponse(responseText)
-
-	if err := json.Unmarshal([]byte(cleanedText), &output); err != nil {
-		return models.LLMOutput{}, fmt.Errorf("failed to unmarshal JSON response: %w", err)
-	}
-
-	// Validate required fields
-	if output.Intro == "" {
-		return models.LLMOutput{}, fmt.Errorf("missing required field: intro")
-	}
-	if output.CategoryNotes == nil {
-		output.CategoryNotes = make(map[string]string)
-	}
-
-	return output, nil
 }
 
 // cleanJSONResponse removes markdown code blocks and whitespace from response
@@ -137,35 +60,6 @@ func cleanJSONResponse(text string) string {
 	}
 
 	return text
-}
-
-// callAPIWithRetry calls API with exponential backoff retry
-func (c *Client) callAPIWithRetry(prompt string) (string, error) {
-	var lastErr error
-
-	for attempt := 0; attempt <= c.config.MaxRetries; attempt++ {
-		if attempt > 0 {
-			backoffDuration := time.Duration(math.Pow(2, float64(attempt))) * time.Second
-			c.logger.Warn().
-				Int("attempt", attempt).
-				Float64("backoff_seconds", backoffDuration.Seconds()).
-				Msg("retrying LLM API call")
-			time.Sleep(backoffDuration)
-		}
-
-		response, err := c.callAPI(prompt)
-		if err == nil {
-			return response, nil
-		}
-
-		lastErr = err
-		c.logger.Warn().
-			Int("attempt", attempt).
-			Err(err).
-			Msg("LLM API call failed")
-	}
-
-	return "", fmt.Errorf("all retry attempts exhausted: %w", lastErr)
 }
 
 // callAPI makes a single API call to the LLM service
