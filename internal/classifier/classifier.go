@@ -2,6 +2,7 @@ package classifier
 
 import (
 	"strings"
+	"unicode"
 
 	"ai-repo-insights/internal/config"
 	"ai-repo-insights/internal/models"
@@ -72,31 +73,30 @@ func (c *Classifier) matchesExclude(repo models.RepoMetadata) bool {
 func (c *Classifier) matchesKeyword(text string, keyword string) bool {
 	keyword = strings.ToLower(keyword)
 	text = strings.ToLower(text)
-	
+
 	// For hyphenated keywords like "machine-learning", match as-is
 	if strings.Contains(keyword, "-") {
 		return strings.Contains(text, keyword)
 	}
-	
+
 	// For single words, check if keyword appears as whole word or as part of related words
 	// This handles: exact match, plurals, and word stems (e.g., "agent" matches "agentic")
-	words := strings.Fields(text)
+	words := strings.FieldsFunc(text, func(r rune) bool {
+		return !unicode.IsLetter(r) && !unicode.IsDigit(r)
+	})
 	for _, word := range words {
-		// Remove common punctuation
-		word = strings.Trim(word, ".,;:!?()[]{}\"'")
-		
 		// Exact match or plural match
 		if word == keyword || word == keyword+"s" {
 			return true
 		}
-		
+
 		// Stem matching: if word starts with keyword (handles "agentic" from "agent")
 		// Only for keywords >= 4 chars to avoid false positives
 		if len(keyword) >= 4 && strings.HasPrefix(word, keyword) {
 			return true
 		}
 	}
-	
+
 	return false
 }
 
