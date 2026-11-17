@@ -177,3 +177,10 @@ func TestOpenAIRequestsSendSessionHeaderAndUserAgent(t *testing.T) {
 		t.Fatalf("User-Agent %q", agents[0])
 	}
 }
+
+func TestRadarPromptAsksForCommentsUnderTheHardLimit(t *testing.T) {
+	prompt := buildRadarPrompt([]radar.Candidate{candidate("a", "x")}, "规范", "AI")
+	if !strings.Contains(prompt, "50 字以内") {
+		t.Fatalf("prompt should give the model margin below the 60-rune limit:\n%s", prompt)
+	}
+}
