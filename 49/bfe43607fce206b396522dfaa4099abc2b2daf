@@ -1,0 +1,27 @@
+README.md
+  s_42173c093319fa::t_85fe095e980123 102
+internal/config/config.go
+  s_42173c093319fa::t_e5dd6b88dddc12 43-45
+internal/llm/client.go
+  s_42173c093319fa::t_e5dd6b88dddc12 5-6,26-27,40-41,104-107,212-220
+config/llm.json
+  s_42173c093319fa::t_85fe095e980123 2-4,8-9
+internal/llm/radar_test.go
+  s_42173c093319fa::t_5d7e2bd2dc4acd 170
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "49bfe43607fce206b396522dfaa4099abc2b2daf",
+  "prompts": {},
+  "sessions": {
+    "s_42173c093319fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "04082371-feae-4a15-869f-46f83c62aabf",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "NoSugarCoffee <25247325+NoSugarCoffee@users.noreply.github.com>"
+    }
+  }
+}
