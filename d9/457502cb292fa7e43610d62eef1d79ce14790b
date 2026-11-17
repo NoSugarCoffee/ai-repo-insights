@@ -1,0 +1,32 @@
+.github/workflows/weekly-report.yml
+  s_42173c093319fa::t_2af37e619db05b 71,73
+internal/radar/week.go
+  s_42173c093319fa::t_d71931a3ab5bfd 1-14
+internal/history/history.go
+  s_42173c093319fa::t_d71931a3ab5bfd 61-64,70-76,78-83,91
+internal/radar/week_test.go
+  s_42173c093319fa::t_5fa34a56d8ae3d 1-22
+internal/models/helpers.go
+  s_42173c093319fa::t_d71931a3ab5bfd 218-223
+  s_42173c093319fa::t_ff5b133f54e1dc 193,204,208,210
+internal/pipeline/orchestrator.go
+  s_42173c093319fa::t_2af37e619db05b 105-109
+internal/history/history_test.go
+  s_42173c093319fa::t_5fa34a56d8ae3d 14-24,26,29-31,33-34,36,38-39,44,46,48-51,53-54,58-60,62,64-66,70-72,74,76-77,79-81,83-84,88-91,93-94,98-100,102,104-105,107,109,111-112
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "d9457502cb292fa7e43610d62eef1d79ce14790b",
+  "prompts": {},
+  "sessions": {
+    "s_42173c093319fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "04082371-feae-4a15-869f-46f83c62aabf",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "NoSugarCoffee <25247325+NoSugarCoffee@users.noreply.github.com>"
+    }
+  }
+}
