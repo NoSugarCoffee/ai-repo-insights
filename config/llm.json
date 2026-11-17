@@ -1,9 +1,10 @@
 {
-  "base_url": "https://generativelanguage.googleapis.com/v1beta",
-  "model": "gemini-2.5-pro",
-  "provider": "gemini",
+  "base_url": "https://opencode.ai/inference/go/openai/v1",
+  "model": "glm-5.3",
+  "provider": "openai",
   "role_description": "GitHub open source project analyst",
   "output_tone": "concise, analytical, non-promotional",
   "temperature": 0.7,
-  "timeout_seconds": 180
+  "timeout_seconds": 180,
+  "session_header": "x-opencode-session"
 }

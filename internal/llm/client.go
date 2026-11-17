@@ -2,6 +2,8 @@ package llm
 
 import (
 	"bytes"
+	"crypto/rand"
+	"encoding/hex"
 	"encoding/json"
 	"fmt"
 	"io"
@@ -21,6 +23,8 @@ type Client struct {
 	apiKey string
 	client *http.Client
 	logger zerolog.Logger
+	// sessionID is sent in config.SessionHeader on every request of this run.
+	sessionID string
 	// backoff is the wait before retry attempt n (n >= 1).
 	backoff func(attempt int) time.Duration
 }
@@ -33,7 +37,8 @@ func NewClient(cfg config.LLMConfig, apiKey string, logger zerolog.Logger) *Clie
 		client: &http.Client{
 			Timeout: time.Duration(cfg.TimeoutSeconds) * time.Second,
 		},
-		logger: logger,
+		logger:    logger,
+		sessionID: newSessionID(),
 		backoff: func(attempt int) time.Duration {
 			return time.Duration(math.Pow(2, float64(attempt))) * time.Second
 		},
@@ -96,6 +101,10 @@ func (c *Client) callOpenAIAPI(prompt string) (string, error) {
 
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", "Bearer "+c.apiKey)
+	req.Header.Set("User-Agent", userAgent)
+	if c.config.SessionHeader != "" {
+		req.Header.Set(c.config.SessionHeader, c.sessionID)
+	}
 
 	resp, err := c.client.Do(req)
 	if err != nil {
@@ -199,4 +208,14 @@ func (c *Client) callGeminiAPI(prompt string) (string, error) {
 	}
 
 	return apiResponse.Candidates[0].Content.Parts[0].Text, nil
+}
+
+const userAgent = "ai-repo-insights/2.0"
+
+func newSessionID() string {
+	b := make([]byte, 8)
+	if _, err := rand.Read(b); err != nil {
+		panic(fmt.Sprintf("crypto/rand failed: %v", err))
+	}
+	return "ai-radar-" + hex.EncodeToString(b)
 }

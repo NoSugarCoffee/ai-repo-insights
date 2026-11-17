@@ -99,7 +99,7 @@ All configuration lives in JSON files under `config/` (or a custom directory via
 | `languages.json` | Programming languages to track |
 | `keywords.json` | Include/exclude keywords and category mappings |
 | `settings.json` | Operational parameters (`top_n`, `window_days`, `report_language`, etc.) |
-| `llm.json` | LLM API settings (`base_url`, `model`, `provider`, `temperature`, etc.) |
+| `llm.json` | LLM API settings (`base_url`, `model`, `provider`, `temperature`, `session_header`, etc.). The default uses OpenCode Go (`glm-5.3`), which requires the `x-opencode-session` header |
 | `writing-guide.md` | Writing rules sent verbatim to the LLM; required |
 
 See [docs/configuration.md](docs/configuration.md) for full reference.

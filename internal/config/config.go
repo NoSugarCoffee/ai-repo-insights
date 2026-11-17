@@ -40,6 +40,9 @@ type LLMConfig struct {
 	RoleDescription string  `json:"role_description"`
 	OutputTone      string  `json:"output_tone"`
 	Temperature     float64 `json:"temperature"`
+	// SessionHeader names a request header that carries one ID per run.
+	// OpenCode Go rejects requests without "x-opencode-session".
+	SessionHeader string `json:"session_header"`
 }
 
 // Config represents the complete system configuration
