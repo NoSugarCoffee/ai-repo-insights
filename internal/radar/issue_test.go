@@ -94,4 +94,3 @@ func TestWriteIssueFilename(t *testing.T) {
 		t.Fatalf("round trip: %v %#v", err, back)
 	}
 }
-

@@ -1,130 +1,73 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"fmt"
+	"net/http"
 	"os"
 	"time"
 
+	"ai-repo-insights/internal/classifier"
 	"ai-repo-insights/internal/config"
+	"ai-repo-insights/internal/fetcher"
+	"ai-repo-insights/internal/githubapi"
+	"ai-repo-insights/internal/history"
+	"ai-repo-insights/internal/llm"
 	"ai-repo-insights/internal/logging"
 	"ai-repo-insights/internal/pipeline"
-	"ai-repo-insights/internal/radar"
 )
 
-const (
-	version = "1.0.0"
-)
+const version = "2.0.0"
 
 func main() {
-	// Define CLI flags
 	configDir := flag.String("config", "config", "Path to configuration directory")
-	reportID := flag.String("report-id", "", "Custom report ID (default: auto-generated)")
+	outDir := flag.String("out", "data/weekly", "Directory the weekly issue JSON is written to")
+	historyPath := flag.String("history", "data/history.json", "Path to the repository history file")
 	logLevel := flag.String("log-level", "info", "Log level (debug, info, warn, error)")
 	showVersion := flag.Bool("version", false, "Show version information")
-	showHelp := flag.Bool("help", false, "Show help information")
-
 	flag.Parse()
 
-	// Show version
 	if *showVersion {
-		fmt.Printf("GitHub Insights v%s\n", version)
-		os.Exit(0)
+		fmt.Printf("ai-repo-insights v%s\n", version)
+		return
 	}
 
-	// Show help
-	if *showHelp {
-		printHelp()
-		os.Exit(0)
-	}
-
-	// Initialize logger
 	logger := logging.NewLogger(*logLevel)
-	logger.Info().Str("version", version).Msg("starting GitHub Insights")
 
-	// Load configuration
-	logger.Info().Str("config_dir", *configDir).Msg("loading configuration")
 	cfg, err := config.Load(*configDir)
 	if err != nil {
-		logger.Fatal().Err(err).Msg("failed to load configuration")
+		fail("load configuration: %v", err)
+	}
+	if errs := cfg.Validate(); len(errs) > 0 {
+		fail("invalid configuration: %v", errs)
 	}
 
-	// Validate configuration
-	errors := cfg.Validate()
-	if len(errors) > 0 {
-		logger.Error().Strs("validation_errors", errors).Msg("configuration validation failed")
-		for _, errMsg := range errors {
-			fmt.Fprintf(os.Stderr, "Configuration error: %s\n", errMsg)
-		}
-		os.Exit(1)
+	githubToken := os.Getenv("GITHUB_TOKEN")
+	llmAPIKey := os.Getenv("LLM_API_KEY")
+	if githubToken == "" || llmAPIKey == "" {
+		fail("GITHUB_TOKEN and LLM_API_KEY must both be set: the radar reads repository details from GitHub and has no text without the LLM")
 	}
 
-	logger.Info().Msg("configuration loaded and validated successfully")
-
-	// Check required environment variables
-	if os.Getenv("GITHUB_TOKEN") == "" {
-		logger.Warn().Msg("GITHUB_TOKEN not set - star history fetching will fail")
-	}
-	if os.Getenv("LLM_API_KEY") == "" {
-		logger.Warn().Msg("LLM_API_KEY not set - will use template-based report")
-	}
-
-	// Generate report ID if needed
-	finalReportID := *reportID
-	if finalReportID == "" {
-		finalReportID = radar.ReportID(time.Now())
+	repoClassifier := classifier.New(cfg.Keywords)
+	deps := pipeline.Deps{
+		Trending: fetcher.New(cfg.Languages, logger),
+		Classify: repoClassifier.Classify,
+		GitHub:   githubapi.NewClient("https://api.github.com", githubToken, &http.Client{Timeout: 30 * time.Second}),
+		Copy:     llm.NewClient(cfg.LLM, llmAPIKey, logger),
+		History:  history.NewManager(*historyPath, logger),
+		OutDir:   *outDir,
+		Now:      time.Now(),
 	}
 
-	logger.Info().Str("report_id", finalReportID).Msg("using report ID")
-
-	// Create and run pipeline
-	orchestrator := pipeline.NewOrchestrator(*cfg, logger)
-	result, err := orchestrator.RunPipeline(finalReportID)
-
+	path, err := pipeline.Run(context.Background(), *cfg, deps, logger)
 	if err != nil {
-		logger.Error().Err(err).Msg("pipeline execution failed")
-		fmt.Fprintf(os.Stderr, "Pipeline failed: %s\n", err.Error())
-		os.Exit(1)
+		fail("radar run failed, nothing was published: %v", err)
 	}
-
-	if !result.Success {
-		logger.Error().Str("error", result.Error).Msg("pipeline completed with errors")
-		fmt.Fprintf(os.Stderr, "Pipeline failed: %s\n", result.Error)
-		os.Exit(1)
-	}
-
-	// Success
-	logger.Info().
-		Str("report_id", result.ReportID).
-		Msg("pipeline completed successfully")
-
-	fmt.Printf("\n✓ Report generated successfully\n")
-	fmt.Printf("  Report ID: %s\n", result.ReportID)
-	fmt.Printf("  Report file: reports/%s.md\n", result.ReportID)
-	fmt.Printf("  Summary backup: data/summaries/%s.json\n", result.ReportID)
+	fmt.Printf("Issue written: %s\n", path)
 }
 
-// printHelp prints usage information
-func printHelp() {
-	fmt.Printf("GitHub Insights v%s\n\n", version)
-	fmt.Println("Usage: github-insights [options]")
-	fmt.Println("\nOptions:")
-	fmt.Println("  -config string")
-	fmt.Println("        Path to configuration directory (default: config)")
-	fmt.Println("  -report-id string")
-	fmt.Println("        Custom report ID (default: auto-generated)")
-	fmt.Println("  -log-level string")
-	fmt.Println("        Log level: debug, info, warn, error (default: info)")
-	fmt.Println("  -version")
-	fmt.Println("        Show version information")
-	fmt.Println("  -help")
-	fmt.Println("        Show this help message")
-	fmt.Println("\nEnvironment Variables:")
-	fmt.Println("  GITHUB_TOKEN    GitHub API token (required)")
-	fmt.Println("  LLM_API_KEY     LLM API key (optional, uses template if not set)")
-	fmt.Println("\nExamples:")
-	fmt.Println("  github-insights")
-	fmt.Println("  github-insights -config ./custom-config")
-	fmt.Println("  github-insights -report-id 2026-W47")
-	fmt.Println("  github-insights -log-level debug")
+func fail(format string, args ...any) {
+	fmt.Fprintf(os.Stderr, format+"\n", args...)
+	os.Exit(1)
 }
