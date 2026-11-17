@@ -94,3 +94,21 @@ func TestWriteIssueFilename(t *testing.T) {
 		t.Fatalf("round trip: %v %#v", err, back)
 	}
 }
+
+func TestWriteIssueRefusesOverwrite(t *testing.T) {
+	dir := t.TempDir()
+	issue := radar.BuildIssue(issueNow, nil, radar.Copy{Headline: "h", Summary: "s"})
+	if _, err := radar.WriteIssue(dir, issue); err != nil {
+		t.Fatal(err)
+	}
+	original, _ := os.ReadFile(filepath.Join(dir, "2026-W47.json"))
+	issue.Headline = "replacement"
+	_, err := radar.WriteIssue(dir, issue)
+	if err == nil || !strings.Contains(err.Error(), "already exists") {
+		t.Fatalf("expected an already-exists error, got %v", err)
+	}
+	after, _ := os.ReadFile(filepath.Join(dir, "2026-W47.json"))
+	if string(after) != string(original) {
+		t.Fatal("existing issue was overwritten")
+	}
+}

@@ -114,3 +114,27 @@ func TestRadarPromptCarriesGuideAndCandidates(t *testing.T) {
 		t.Error("empty-week prompt should ask for a no-new-projects summary")
 	}
 }
+
+func TestWriteRadarCopyRetryPromptNamesBrokenRule(t *testing.T) {
+	var prompts []string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		var body struct {
+			Messages []struct{ Content string } `json:"messages"`
+		}
+		json.NewDecoder(r.Body).Decode(&body)
+		prompts = append(prompts, body.Messages[0].Content)
+		if len(prompts) == 1 {
+			w.Write(openAIReply(`{"headline":"新工具","summary":"摘要","comments":{"a/x":"一个强大的工具"}}`))
+			return
+		}
+		w.Write(openAIReply(`{"headline":"新工具","summary":"摘要","comments":{"a/x":"给 agent 用的浏览器 CLI"}}`))
+	}))
+	defer srv.Close()
+
+	if _, err := testClient(srv.URL).WriteRadarCopy([]radar.Candidate{candidate("a", "x")}, "规范"); err != nil {
+		t.Fatal(err)
+	}
+	if len(prompts) != 2 || !strings.Contains(prompts[1], "banned-word") || strings.Contains(prompts[0], "banned-word") {
+		t.Fatalf("retry prompt should name the broken rule; prompts: %q", prompts)
+	}
+}

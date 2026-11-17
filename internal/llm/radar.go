@@ -2,6 +2,7 @@ package llm
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"strings"
 	"time"
@@ -72,7 +73,13 @@ func (c *Client) WriteRadarCopy(cands []radar.Candidate, guide string) (radar.Co
 			c.logger.Warn().Int("attempt", attempt).Err(lastErr).Msg("retrying LLM radar copy")
 			time.Sleep(c.backoff(attempt))
 		}
-		copy, err := c.attemptRadarCopy(prompt, cands)
+		attemptPrompt := prompt
+		var ruleErr *CopyRuleError
+		if errors.As(lastErr, &ruleErr) {
+			// Re-sending the same prompt tends to break the same rule again.
+			attemptPrompt += fmt.Sprintf("\n\n上一次的输出不合格（%s：%s）。请修正后重新输出完整 JSON。", ruleErr.Rule, ruleErr.Detail)
+		}
+		copy, err := c.attemptRadarCopy(attemptPrompt, cands)
 		if err == nil {
 			return copy, nil
 		}

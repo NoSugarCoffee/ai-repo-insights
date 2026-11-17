@@ -19,6 +19,11 @@ on:
           - warn
           - error
 
+# A scheduled and a manual run must never overlap: both would pick the same week.
+concurrency:
+  group: weekly-report
+  cancel-in-progress: false
+
 jobs:
   generate-report:
     runs-on: ubuntu-latest

@@ -76,7 +76,9 @@ func (c *Client) Readme(ctx context.Context, fullName string) (string, error) {
 	if err != nil {
 		return "", err
 	}
-	if status == http.StatusNotFound {
+	// GitHub omits the content of files over 1 MB (encoding "none"); such a
+	// README is treated like a missing one rather than failing the run.
+	if status == http.StatusNotFound || body.Encoding == "none" {
 		return "", nil
 	}
 	if body.Encoding != "base64" {

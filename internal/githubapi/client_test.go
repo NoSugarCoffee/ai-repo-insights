@@ -92,3 +92,14 @@ func TestSendsBearerToken(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestReadmeTooLargeIsEmpty(t *testing.T) {
+	// GitHub omits the content of files over 1 MB and reports encoding "none".
+	c := serve(t, func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte(`{"encoding":"none","content":""}`))
+	})
+	got, err := c.Readme(context.Background(), "a/x")
+	if err != nil || got != "" {
+		t.Fatalf("got %q, %v", got, err)
+	}
+}

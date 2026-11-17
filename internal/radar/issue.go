@@ -2,7 +2,9 @@ package radar
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"io/fs"
 	"os"
 	"path/filepath"
 	"sort"
@@ -83,7 +85,10 @@ func BuildIssue(now time.Time, cands []Candidate, copy Copy) Issue {
 	return issue
 }
 
-// WriteIssue writes the issue as <dir>/<ID>.json and returns the path.
+// WriteIssue writes the issue as <dir>/<ID>.json and returns the path. It
+// refuses to replace an existing issue: a second run in the same week finds
+// every repository already in history and would publish an empty issue over
+// the real one.
 func WriteIssue(dir string, issue Issue) (string, error) {
 	if err := os.MkdirAll(dir, 0o755); err != nil {
 		return "", fmt.Errorf("create issue dir %s: %w", dir, err)
@@ -93,7 +98,15 @@ func WriteIssue(dir string, issue Issue) (string, error) {
 		return "", fmt.Errorf("marshal issue %s: %w", issue.ID, err)
 	}
 	path := filepath.Join(dir, issue.ID+".json")
-	if err := os.WriteFile(path, append(data, '\n'), 0o644); err != nil {
+	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o644)
+	if errors.Is(err, fs.ErrExist) {
+		return "", fmt.Errorf("issue %s already exists; to regenerate this week, delete it and revert data/history.json to the commit before it, then re-run", path)
+	}
+	if err != nil {
+		return "", fmt.Errorf("create issue %s: %w", path, err)
+	}
+	defer file.Close()
+	if _, err := file.Write(append(data, '\n')); err != nil {
 		return "", fmt.Errorf("write issue %s: %w", path, err)
 	}
 	return path, nil
