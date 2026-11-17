@@ -1,0 +1,25 @@
+internal/radar/issue.go
+  s_42173c093319fa::t_a77876a08a87a8 1-152
+internal/radar/select_test.go
+  s_42173c093319fa::t_c12744701c6d8b 1-35
+internal/radar/select.go
+  s_42173c093319fa::t_a77876a08a87a8 1-47
+internal/radar/issue_test.go
+  s_42173c093319fa::t_c12744701c6d8b 1-97
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "0da883796fadb0f343cbf8b4732bb91a82a328db",
+  "prompts": {},
+  "sessions": {
+    "s_42173c093319fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "04082371-feae-4a15-869f-46f83c62aabf",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "NoSugarCoffee <25247325+NoSugarCoffee@users.noreply.github.com>"
+    }
+  }
+}
