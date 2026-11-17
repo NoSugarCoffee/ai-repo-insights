@@ -49,6 +49,7 @@ func (m *Manager) LoadHistory() (*models.History, error) {
 	if history.History == nil {
 		history.History = make(map[string]models.RepoHistory)
 	}
+	history.History = normalizeHistory(history.History)
 
 	m.logger.Info().
 		Str("path", m.historyPath).
@@ -67,7 +68,13 @@ func (m *Manager) UpdateHistory(repoKeys []string, reportID string, reportDate s
 		return nil, err
 	}
 
-	for _, repoKey := range repoKeys {
+	seen := make(map[string]struct{}, len(repoKeys))
+	for _, rawKey := range repoKeys {
+		repoKey := models.NormalizeRepoKey(rawKey)
+		if _, duplicate := seen[repoKey]; duplicate {
+			continue
+		}
+		seen[repoKey] = struct{}{}
 		if existing, exists := history.History[repoKey]; exists {
 			existing.WeeksInTop++
 			existing.LastSeenReport = reportID
@@ -97,6 +104,8 @@ func (m *Manager) UpdateHistory(repoKeys []string, reportID string, reportDate s
 
 // SaveHistory saves updated history to JSON file
 func (m *Manager) SaveHistory(history *models.History) error {
+	history.History = normalizeHistory(history.History)
+
 	// Ensure directory exists
 	dir := filepath.Dir(m.historyPath)
 	if err := os.MkdirAll(dir, 0755); err != nil {
@@ -118,4 +127,30 @@ func (m *Manager) SaveHistory(history *models.History) error {
 		Msg("saved history")
 
 	return nil
+}
+
+func normalizeHistory(entries map[string]models.RepoHistory) map[string]models.RepoHistory {
+	normalized := make(map[string]models.RepoHistory, len(entries))
+	for rawKey, entry := range entries {
+		key := models.NormalizeRepoKey(rawKey)
+		if existing, ok := normalized[key]; ok {
+			entry = mergeRepoHistory(existing, entry)
+		}
+		normalized[key] = entry
+	}
+	return normalized
+}
+
+func mergeRepoHistory(a, b models.RepoHistory) models.RepoHistory {
+	merged := a
+	merged.WeeksInTop += b.WeeksInTop
+	if merged.FirstSeenDate == "" || (b.FirstSeenDate != "" && b.FirstSeenDate < merged.FirstSeenDate) {
+		merged.FirstSeenReport = b.FirstSeenReport
+		merged.FirstSeenDate = b.FirstSeenDate
+	}
+	if b.LastSeenDate > merged.LastSeenDate {
+		merged.LastSeenReport = b.LastSeenReport
+		merged.LastSeenDate = b.LastSeenDate
+	}
+	return merged
 }

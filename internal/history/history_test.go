@@ -62,7 +62,8 @@ func TestUpdateHistory_ExistingRepoKeepsFirstSeen(t *testing.T) {
 		t.Fatal(err)
 	}
 	got := hist.History["a/x"]
-	if got.WeeksInTop != 3 || got.FirstSeenReport != "2026-W45" || got.LastSeenReport != "2026-W47" {
+	want := models.RepoHistory{WeeksInTop: 3, LastSeenReport: "2026-W47", LastSeenDate: "2026-11-16", FirstSeenReport: "2026-W45", FirstSeenDate: "2026-11-02"}
+	if got != want {
 		t.Fatalf("got %#v", got)
 	}
 }
@@ -90,13 +91,16 @@ func TestHistorySeen(t *testing.T) {
 	if !h.Seen("a/x") {
 		t.Fatal("a/x should be seen")
 	}
+	if !h.Seen("A/X") {
+		t.Fatal("repository lookup should be case-insensitive")
+	}
 	if h.Seen("c/z") {
 		t.Fatal("c/z should not be seen")
 	}
 }
 
 func TestSaveHistoryRoundTrip(t *testing.T) {
-	m := newManager(t, nil)
+	m := NewManager(filepath.Join(t.TempDir(), "nested", "dir", "history.json"), zerolog.Nop())
 	hist, err := m.UpdateHistory([]string{"a/x", "b/y"}, "2026-W47", "2026-11-16")
 	if err != nil {
 		t.Fatal(err)
@@ -110,5 +114,39 @@ func TestSaveHistoryRoundTrip(t *testing.T) {
 	}
 	if len(loaded.History) != 2 || loaded.LatestReport != "2026-W47" {
 		t.Fatalf("got %#v", loaded)
+	}
+	for _, key := range []string{"a/x", "b/y"} {
+		want := models.RepoHistory{WeeksInTop: 1, LastSeenReport: "2026-W47", LastSeenDate: "2026-11-16", FirstSeenReport: "2026-W47", FirstSeenDate: "2026-11-16"}
+		if got := loaded.History[key]; got != want {
+			t.Fatalf("%s: got %#v want %#v", key, got, want)
+		}
+	}
+}
+
+func TestLoadHistoryNormalizesAndMergesRepositoryKeys(t *testing.T) {
+	seed := &models.History{History: map[string]models.RepoHistory{
+		"ruvnet/ruvector": {WeeksInTop: 3, FirstSeenReport: "2026-W08", FirstSeenDate: "2026-02-16", LastSeenReport: "2026-W11", LastSeenDate: "2026-03-09"},
+		"ruvnet/RuVector": {WeeksInTop: 3, FirstSeenReport: "2026-W12", FirstSeenDate: "2026-03-16", LastSeenReport: "2026-W14", LastSeenDate: "2026-03-30"},
+	}}
+	hist, err := newManager(t, seed).LoadHistory()
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hist.History) != 1 {
+		t.Fatalf("got keys %#v", hist.History)
+	}
+	want := models.RepoHistory{WeeksInTop: 6, FirstSeenReport: "2026-W08", FirstSeenDate: "2026-02-16", LastSeenReport: "2026-W14", LastSeenDate: "2026-03-30"}
+	if got := hist.History["ruvnet/ruvector"]; got != want {
+		t.Fatalf("got %#v want %#v", got, want)
+	}
+}
+
+func TestUpdateHistoryNormalizesAndDeduplicatesKeys(t *testing.T) {
+	hist, err := newManager(t, nil).UpdateHistory([]string{"Owner/Repo", "owner/repo"}, "2026-W47", "2026-11-16")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(hist.History) != 1 || hist.History["owner/repo"].WeeksInTop != 1 {
+		t.Fatalf("got %#v", hist.History)
 	}
 }

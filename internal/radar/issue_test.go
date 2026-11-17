@@ -50,6 +50,23 @@ func TestBuildIssueSortsAndCaps(t *testing.T) {
 	}
 }
 
+func TestBuildIssueUsesIDAsFinalTieBreakerBeforeCap(t *testing.T) {
+	var cands []radar.Candidate
+	for i := radar.MaxNewEntries; i >= 0; i-- {
+		cands = append(cands, entry(fmt.Sprintf("daily-%02d", i), 0, 0))
+	}
+	issue := radar.BuildIssue(issueNow, cands, radar.Copy{})
+	if len(issue.NewEntries) != radar.MaxNewEntries {
+		t.Fatalf("got %d entries", len(issue.NewEntries))
+	}
+	for i, item := range issue.NewEntries {
+		want := fmt.Sprintf("o/daily-%02d", i)
+		if item.ID != want {
+			t.Fatalf("entry %d: got %s want %s", i, item.ID, want)
+		}
+	}
+}
+
 func TestBuildIssueEmptyWeek(t *testing.T) {
 	data, err := json.Marshal(radar.BuildIssue(issueNow, nil, radar.Copy{Headline: "h", Summary: "s"}))
 	if err != nil {
@@ -92,6 +109,13 @@ func TestWriteIssueFilename(t *testing.T) {
 	var back radar.Issue
 	if err := json.Unmarshal(data, &back); err != nil || back.ID != "2026-W47" {
 		t.Fatalf("round trip: %v %#v", err, back)
+	}
+	matches, err := filepath.Glob(filepath.Join(dir, ".2026-W47-*.tmp"))
+	if err != nil {
+		t.Fatal(err)
+	}
+	if len(matches) != 0 {
+		t.Fatalf("temporary files left behind: %v", matches)
 	}
 }
 

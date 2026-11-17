@@ -22,7 +22,7 @@ go build -o ai-repo-insights ./cmd/ai-repo-insights
 
 # 2. Set environment variables (both required)
 export GITHUB_TOKEN=ghp_...   # repository details and README excerpts
-export LLM_API_KEY=sk-...     # headline, summary and per-repo comments
+export LLM_API_KEY=your-google-ai-key  # Gemini key for the default config
 
 # 3. Run
 ./ai-repo-insights
@@ -64,7 +64,7 @@ Each run writes one issue of the **AI 开源雷达** to `data/weekly/<YYYY-Www>.
 }
 ```
 
-`starsThisWeek` and `starsThisMonth` are `null` when the repository was not on that trending page.
+`starsThisWeek` and `starsThisMonth` are `null` when the scraper reports zero or cannot parse a positive delta. This normally means the repository was absent from that trending page; an actual zero and an unknown value are not distinguished.
 
 ---
 
@@ -82,7 +82,7 @@ Each run writes one issue of the **AI 开源雷达** to `data/weekly/<YYYY-Www>.
 
 ### Scheduled run
 
-`.github/workflows/weekly-report.yml` runs every Monday 00:00 UTC (and on manual dispatch). It commits the new issue and history, then sends a `radar-updated` repository dispatch to the site so it redeploys. That dispatch needs the `DEPLOY_TOKEN` secret, a token with repo scope on the site repository.
+`.github/workflows/weekly-report.yml` runs every Monday 00:00 UTC (and on manual dispatch). It commits the new issue and history, then sends a `radar-updated` repository dispatch to the site so it redeploys. `DEPLOY_TOKEN` should be a fine-grained personal access token restricted to `NoSugarCoffee/NoSugarCoffee.github.io`, with repository **Contents: Read and write** permission. If publication succeeds but dispatch fails, manually run the workflow with `dispatch_only` enabled; this retries the dispatch without regenerating the non-overwritable weekly issue.
 
 ### Backfilling history
 
@@ -119,7 +119,7 @@ Pre-built configs for different tracking domains:
 ./ai-repo-insights -config examples/devops
 ```
 
-See [examples/README.md](examples/README.md) for how to create custom domain configs. An example directory also needs its own `writing-guide.md`.
+Each example directory contains every required configuration file. See [examples/README.md](examples/README.md) for how to create custom domain configs.
 
 ---
 

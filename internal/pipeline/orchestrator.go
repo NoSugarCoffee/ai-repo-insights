@@ -3,7 +3,9 @@ package pipeline
 
 import (
 	"context"
+	"errors"
 	"fmt"
+	"os"
 	"time"
 
 	"github.com/rs/zerolog"
@@ -85,12 +87,19 @@ func Run(ctx context.Context, cfg config.Config, deps Deps, logger zerolog.Logge
 	}
 	updated, err := deps.History.UpdateHistory(keys, reportID, deps.Now.UTC().Format("2006-01-02"))
 	if err != nil {
-		return "", fmt.Errorf("update history after writing %s: %w", path, err)
+		return "", rollbackIssue(path, fmt.Errorf("update history after writing %s: %w", path, err))
 	}
 	if err := deps.History.SaveHistory(updated); err != nil {
-		return "", fmt.Errorf("save history after writing %s: %w", path, err)
+		return "", rollbackIssue(path, fmt.Errorf("save history after writing %s: %w", path, err))
 	}
 
 	logger.Info().Str("issue", path).Int("candidates", len(cands)).Msg("radar run completed")
 	return path, nil
+}
+
+func rollbackIssue(path string, cause error) error {
+	if err := os.Remove(path); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return errors.Join(cause, fmt.Errorf("remove issue %s after history failure: %w", path, err))
+	}
+	return cause
 }

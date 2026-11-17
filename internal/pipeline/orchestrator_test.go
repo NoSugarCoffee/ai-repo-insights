@@ -36,11 +36,15 @@ type fakeCopy struct {
 	err   error
 	calls int
 	seen  int
+	hook  func()
 }
 
 func (f *fakeCopy) WriteRadarCopy(cands []radar.Candidate, _ string) (radar.Copy, error) {
 	f.calls++
 	f.seen = len(cands)
+	if f.hook != nil {
+		f.hook()
+	}
 	if f.err != nil {
 		return radar.Copy{}, f.err
 	}
@@ -155,5 +159,23 @@ func TestRunEmptyWeek(t *testing.T) {
 	data, _ := os.ReadFile(path)
 	if !bytes.Contains(data, []byte(`"newProjects": []`)) || !bytes.Contains(data, []byte(`"newEntries": []`)) {
 		t.Fatalf("issue %s", data)
+	}
+}
+
+func TestRunRemovesIssueWhenHistoryUpdateFails(t *testing.T) {
+	f := newFixture(t, "old/seen")
+	f.copy.hook = func() {
+		if err := os.Remove(f.historyPath); err != nil {
+			t.Fatal(err)
+		}
+		if err := os.Mkdir(f.historyPath, 0o755); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := Run(context.Background(), testConfig(), f.deps, zerolog.Nop()); err == nil {
+		t.Fatal("expected history update error")
+	}
+	if _, err := os.Stat(filepath.Join(f.outDir, "2026-W47.json")); !os.IsNotExist(err) {
+		t.Fatalf("issue should be removed after history failure, stat error: %v", err)
 	}
 }

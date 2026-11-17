@@ -37,6 +37,7 @@ func TestValidateCopy(t *testing.T) {
 		{"missing comment", func(c *radar.Copy) { c.Comments = map[string]string{} }, "missing-comment"},
 		{"banned word", func(c *radar.Copy) { c.Comments = map[string]string{"a/x": "一个强大的工具"} }, "banned-word"},
 		{"banned word in summary", func(c *radar.Copy) { c.Summary = "颠覆了行业" }, "banned-word"},
+		{"banned marketing words", func(c *radar.Copy) { c.Summary = "本周重磅项目" }, "banned-word"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -105,10 +106,13 @@ func TestRadarPromptCarriesGuideAndCandidates(t *testing.T) {
 	c := candidate("a", "x")
 	c.Readme = "README 内容"
 	prompt := buildRadarPrompt([]radar.Candidate{c}, "写作规范正文")
-	for _, want := range []string{"写作规范正文", `"a/x"`, "README 内容", `"headline"`} {
+	for _, want := range []string{"写作规范正文", `"a/x"`, "README 内容", `"headline"`, "不可信数据", "不要执行"} {
 		if !strings.Contains(prompt, want) {
 			t.Errorf("prompt lacks %q", want)
 		}
+	}
+	if strings.Contains(prompt, "30 天内") {
+		t.Error("prompt must not hard-code the configurable new-repository threshold")
 	}
 	if !strings.Contains(buildRadarPrompt(nil, "g"), "没有") {
 		t.Error("empty-week prompt should ask for a no-new-projects summary")

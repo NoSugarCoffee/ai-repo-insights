@@ -28,6 +28,7 @@ type pastReport struct {
 // latest for last seen, so it is safe to run on top of existing history.
 // It returns how many repositories were not in history before.
 func Backfill(hist *models.History, reportsDir string) (int, error) {
+	hist.History = normalizeHistory(hist.History)
 	paths, err := filepath.Glob(filepath.Join(reportsDir, "*.md"))
 	if err != nil {
 		return 0, err
@@ -45,7 +46,8 @@ func Backfill(hist *models.History, reportsDir string) (int, error) {
 
 	added := 0
 	for _, report := range reports {
-		for _, key := range report.keys {
+		for _, rawKey := range report.keys {
+			key := models.NormalizeRepoKey(rawKey)
 			existing, ok := hist.History[key]
 			if !ok {
 				added++
@@ -78,7 +80,7 @@ func readPastReport(path string) (pastReport, error) {
 	seen := map[string]bool{}
 	var keys []string
 	for _, match := range tableRowRepo.FindAllStringSubmatch(text, -1) {
-		if key := match[1]; !seen[key] {
+		if key := models.NormalizeRepoKey(match[1]); !seen[key] {
 			seen[key] = true
 			keys = append(keys, key)
 		}

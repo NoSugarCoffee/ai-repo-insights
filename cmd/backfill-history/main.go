@@ -23,6 +23,9 @@ func main() {
 	if err != nil {
 		fail(err)
 	}
+	if err := validateReportsDir(*reportsDir); err != nil {
+		fail(err)
+	}
 	added, err := history.Backfill(hist, *reportsDir)
 	if err != nil {
 		fail(err)
@@ -31,6 +34,17 @@ func main() {
 		fail(err)
 	}
 	fmt.Printf("Backfilled %d repositories; history now tracks %d.\n", added, len(hist.History))
+}
+
+func validateReportsDir(path string) error {
+	info, err := os.Stat(path)
+	if err != nil {
+		return fmt.Errorf("reports directory %s: %w", path, err)
+	}
+	if !info.IsDir() {
+		return fmt.Errorf("reports path is not a directory: %s", path)
+	}
+	return nil
 }
 
 func fail(err error) {

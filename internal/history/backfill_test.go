@@ -26,7 +26,7 @@ func TestBackfillEarliestWins(t *testing.T) {
 	if got.FirstSeenReport != "2026-02-week6" || got.FirstSeenDate != "2026-02-07" || got.LastSeenReport != "2026-11-week47" {
 		t.Fatalf("openclaw %#v", got)
 	}
-	shannon := hist.History["KeygraphHQ/shannon"]
+	shannon := hist.History["keygraphhq/shannon"]
 	if shannon.FirstSeenReport != "2026-03-week10" || shannon.LastSeenReport != "2026-03-week10" || shannon.LastSeenDate != "2026-03-02" {
 		t.Fatalf("shannon %#v", shannon)
 	}
@@ -43,5 +43,25 @@ func TestBackfillRequiresReportDate(t *testing.T) {
 	_, err := Backfill(models.NewHistory(), dir)
 	if err == nil {
 		t.Fatal("expected an error for a report without Report Date")
+	}
+}
+
+func TestBackfillNormalizesRepositoryKeys(t *testing.T) {
+	dir := t.TempDir()
+	report := "**Report Date**: 2026-03-16\n\n| Rank | Repository |\n|---|---|\n| 1 | [RuVector](https://github.com/ruvnet/RuVector) |\n"
+	if err := os.WriteFile(filepath.Join(dir, "2026-03-week12.md"), []byte(report), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	hist := models.NewHistory()
+	hist.History["ruvnet/ruvector"] = models.RepoHistory{WeeksInTop: 1, FirstSeenReport: "2026-02-week8", FirstSeenDate: "2026-02-16", LastSeenReport: "2026-02-week8", LastSeenDate: "2026-02-16"}
+	added, err := Backfill(hist, dir)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if added != 0 || len(hist.History) != 1 {
+		t.Fatalf("added=%d history=%#v", added, hist.History)
+	}
+	if got := hist.History["ruvnet/ruvector"]; got.LastSeenReport != "2026-03-week12" {
+		t.Fatalf("got %#v", got)
 	}
 }

@@ -98,18 +98,39 @@ func WriteIssue(dir string, issue Issue) (string, error) {
 		return "", fmt.Errorf("marshal issue %s: %w", issue.ID, err)
 	}
 	path := filepath.Join(dir, issue.ID+".json")
-	file, err := os.OpenFile(path, os.O_WRONLY|os.O_CREATE|os.O_EXCL, 0o644)
-	if errors.Is(err, fs.ErrExist) {
-		return "", fmt.Errorf("issue %s already exists; to regenerate this week, delete it and revert data/history.json to the commit before it, then re-run", path)
-	}
+	file, err := os.CreateTemp(dir, "."+issue.ID+"-*.tmp")
 	if err != nil {
-		return "", fmt.Errorf("create issue %s: %w", path, err)
+		return "", fmt.Errorf("create temporary issue for %s: %w", path, err)
 	}
-	defer file.Close()
+	tempPath := file.Name()
+	defer os.Remove(tempPath)
+	if err := file.Chmod(0o644); err != nil {
+		return "", closeAfterFileError(file, path, fmt.Errorf("set permissions on temporary issue for %s: %w", path, err))
+	}
 	if _, err := file.Write(append(data, '\n')); err != nil {
-		return "", fmt.Errorf("write issue %s: %w", path, err)
+		return "", closeAfterFileError(file, path, fmt.Errorf("write issue %s: %w", path, err))
+	}
+	if err := file.Sync(); err != nil {
+		return "", closeAfterFileError(file, path, fmt.Errorf("sync issue %s: %w", path, err))
+	}
+	if err := file.Close(); err != nil {
+		return "", fmt.Errorf("close issue %s: %w", path, err)
+	}
+	// Link publishes the fully written file atomically without replacing an
+	// existing issue. os.Rename would overwrite the destination on Unix.
+	if err := os.Link(tempPath, path); errors.Is(err, fs.ErrExist) {
+		return "", fmt.Errorf("issue %s already exists; to regenerate this week, delete it and revert data/history.json to the commit before it, then re-run", path)
+	} else if err != nil {
+		return "", fmt.Errorf("publish issue %s: %w", path, err)
 	}
 	return path, nil
+}
+
+func closeAfterFileError(file *os.File, path string, cause error) error {
+	if err := file.Close(); err != nil {
+		return errors.Join(cause, fmt.Errorf("close temporary issue for %s: %w", path, err))
+	}
+	return cause
 }
 
 func toItem(cand Candidate, comment string) Item {
@@ -144,7 +165,10 @@ func sortItems(items []Item) {
 		if c := compareDesc(items[i].StarsThisWeek, items[j].StarsThisWeek); c != 0 {
 			return c < 0
 		}
-		return compareDesc(items[i].StarsThisMonth, items[j].StarsThisMonth) < 0
+		if c := compareDesc(items[i].StarsThisMonth, items[j].StarsThisMonth); c != 0 {
+			return c < 0
+		}
+		return items[i].ID < items[j].ID
 	})
 }
 

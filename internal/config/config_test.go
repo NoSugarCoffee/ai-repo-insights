@@ -450,10 +450,10 @@ func TestValidation(t *testing.T) {
 					Categories: map[string][]string{"test": {"test"}},
 				},
 				Settings: Settings{
-					WindowDays:      0,  // Invalid: must be > 0
+					WindowDays:      0, // Invalid: must be > 0
 					ShortWindowDays: 30,
 					TopN:            -1, // Invalid: must be > 0
-					ReportLanguage:  "",  // Invalid: empty
+					ReportLanguage:  "", // Invalid: empty
 					FilterDomain:    "Test",
 				},
 				LLM: LLMConfig{
@@ -537,11 +537,29 @@ func TestConfigRequiresWritingGuide(t *testing.T) {
 }
 
 func TestLoadReadsWritingGuide(t *testing.T) {
+	want, err := os.ReadFile("../../config/writing-guide.md")
+	if err != nil {
+		t.Fatal(err)
+	}
 	cfg, err := Load("../../config")
 	if err != nil {
 		t.Fatal(err)
 	}
-	if cfg.WritingGuide == "" {
-		t.Fatal("WritingGuide not loaded")
+	if cfg.WritingGuide != string(want) {
+		t.Fatalf("WritingGuide was not loaded verbatim")
+	}
+}
+
+func TestExampleConfigurationsAreComplete(t *testing.T) {
+	for _, dir := range []string{"../../examples/devops", "../../examples/web-frameworks"} {
+		t.Run(filepath.Base(dir), func(t *testing.T) {
+			cfg, err := Load(dir)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if errs := cfg.Validate(); len(errs) != 0 {
+				t.Fatalf("invalid example config: %v", errs)
+			}
+		})
 	}
 }

@@ -3,6 +3,7 @@ package models
 import (
 	"encoding/json"
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -52,6 +53,12 @@ func FormatRepoKey(owner string, name string) string {
 	return fmt.Sprintf("%s/%s", owner, name)
 }
 
+// NormalizeRepoKey returns the canonical key used for history lookups. GitHub
+// treats repository owner and name casing as insignificant.
+func NormalizeRepoKey(key string) string {
+	return strings.ToLower(key)
+}
+
 // ParseRepoKey parses a repository key into owner and name
 func ParseRepoKey(key string) (owner string, name string, err error) {
 	var parsed [2]string
@@ -85,6 +92,6 @@ func MarshalJSON(v interface{}) ([]byte, error) {
 
 // Seen reports whether the repository key has ever appeared in a report.
 func (h *History) Seen(key string) bool {
-	_, ok := h.History[key]
+	_, ok := h.History[NormalizeRepoKey(key)]
 	return ok
 }
