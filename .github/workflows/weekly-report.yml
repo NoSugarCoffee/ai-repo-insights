@@ -94,6 +94,7 @@ jobs:
 
       - name: Upload report as artifact
         uses: actions/upload-artifact@v4
+        continue-on-error: true
         if: always()
         with:
           name: weekly-report

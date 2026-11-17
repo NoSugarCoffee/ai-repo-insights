@@ -38,6 +38,9 @@ func TestValidateCopy(t *testing.T) {
 		{"banned word", func(c *radar.Copy) { c.Comments = map[string]string{"a/x": "一个强大的工具"} }, "banned-word"},
 		{"banned word in summary", func(c *radar.Copy) { c.Summary = "颠覆了行业" }, "banned-word"},
 		{"banned marketing words", func(c *radar.Copy) { c.Summary = "本周重磅项目" }, "banned-word"},
+		{"exclamation mark", func(c *radar.Copy) { c.Summary = "本周有新项目！" }, "exclamation-mark"},
+		{"boilerplate opening", func(c *radar.Copy) { c.Comments = map[string]string{"a/x": "这是一个浏览器 CLI"} }, "boilerplate-opening"},
+		{"repository name in comment", func(c *radar.Copy) { c.Comments = map[string]string{"a/x": "x 提供浏览器自动化"} }, "repository-name"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
@@ -81,7 +84,7 @@ func TestWriteRadarCopyRetriesInvalidThenSucceeds(t *testing.T) {
 	}))
 	defer srv.Close()
 
-	got, err := testClient(srv.URL).WriteRadarCopy([]radar.Candidate{candidate("a", "x")}, "规范")
+	got, err := testClient(srv.URL).WriteRadarCopy([]radar.Candidate{candidate("a", "x")}, "规范", "AI")
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -96,7 +99,7 @@ func TestWriteRadarCopyFailsAfterRetries(t *testing.T) {
 	}))
 	defer srv.Close()
 
-	_, err := testClient(srv.URL).WriteRadarCopy([]radar.Candidate{candidate("a", "x")}, "规范")
+	_, err := testClient(srv.URL).WriteRadarCopy([]radar.Candidate{candidate("a", "x")}, "规范", "AI")
 	if err == nil || !strings.Contains(err.Error(), "402") {
 		t.Fatalf("got %v", err)
 	}
@@ -105,7 +108,7 @@ func TestWriteRadarCopyFailsAfterRetries(t *testing.T) {
 func TestRadarPromptCarriesGuideAndCandidates(t *testing.T) {
 	c := candidate("a", "x")
 	c.Readme = "README 内容"
-	prompt := buildRadarPrompt([]radar.Candidate{c}, "写作规范正文")
+	prompt := buildRadarPrompt([]radar.Candidate{c}, "写作规范正文", "DevOps")
 	for _, want := range []string{"写作规范正文", `"a/x"`, "README 内容", `"headline"`, "不可信数据", "不要执行"} {
 		if !strings.Contains(prompt, want) {
 			t.Errorf("prompt lacks %q", want)
@@ -114,7 +117,13 @@ func TestRadarPromptCarriesGuideAndCandidates(t *testing.T) {
 	if strings.Contains(prompt, "30 天内") {
 		t.Error("prompt must not hard-code the configurable new-repository threshold")
 	}
-	if !strings.Contains(buildRadarPrompt(nil, "g"), "没有") {
+	if !strings.Contains(prompt, "DevOps 开源雷达") || !strings.Contains(prompt, "关注 DevOps 开源项目的开发者") {
+		t.Errorf("prompt does not carry configured domain and audience: %q", prompt)
+	}
+	if strings.Contains(prompt, "AI 开源雷达") || strings.Contains(prompt, "AI 编程工具") {
+		t.Errorf("prompt retains AI-specific framing: %q", prompt)
+	}
+	if !strings.Contains(buildRadarPrompt(nil, "g", "DevOps"), "没有") {
 		t.Error("empty-week prompt should ask for a no-new-projects summary")
 	}
 }
@@ -135,7 +144,7 @@ func TestWriteRadarCopyRetryPromptNamesBrokenRule(t *testing.T) {
 	}))
 	defer srv.Close()
 
-	if _, err := testClient(srv.URL).WriteRadarCopy([]radar.Candidate{candidate("a", "x")}, "规范"); err != nil {
+	if _, err := testClient(srv.URL).WriteRadarCopy([]radar.Candidate{candidate("a", "x")}, "规范", "AI"); err != nil {
 		t.Fatal(err)
 	}
 	if len(prompts) != 2 || !strings.Contains(prompts[1], "banned-word") || strings.Contains(prompts[0], "banned-word") {

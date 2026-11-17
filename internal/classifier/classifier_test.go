@@ -82,7 +82,7 @@ func TestClassifier_Classify(t *testing.T) {
 
 func TestClassifier_MatchesInclude(t *testing.T) {
 	keywords := config.KeywordConfig{
-		Include: []string{"ai", "llm", "machine-learning"},
+		Include: []string{"ai", "llm", "machine-learning", "c++", "ai/ml"},
 	}
 
 	classifier := New(keywords)
@@ -122,6 +122,22 @@ func TestClassifier_MatchesInclude(t *testing.T) {
 			repo: models.RepoMetadata{
 				Name:        "AI-Project",
 				Description: "An AI project",
+			},
+			expected: true,
+		},
+		{
+			name: "matches plus signs in configured keyword",
+			repo: models.RepoMetadata{
+				Name:        "project",
+				Description: "A C++ framework",
+			},
+			expected: true,
+		},
+		{
+			name: "matches slash in configured keyword",
+			repo: models.RepoMetadata{
+				Name:        "project",
+				Description: "An AI/ML platform",
 			},
 			expected: true,
 		},
@@ -175,9 +191,17 @@ func TestClassifier_MatchesExclude(t *testing.T) {
 			expected: true,
 		},
 		{
-			name: "case insensitive matching",
+			name: "matches exclusion in unprotected hyphenated compound",
 			repo: models.RepoMetadata{
 				Name:        "Learning-AI",
+				Description: "A project",
+			},
+			expected: true,
+		},
+		{
+			name: "matches standalone exclusion",
+			repo: models.RepoMetadata{
+				Name:        "AI learning project",
 				Description: "A project",
 			},
 			expected: true,
@@ -198,6 +222,43 @@ func TestClassifier_MatchesExclude(t *testing.T) {
 			result := classifier.matchesExclude(tt.repo)
 			if result != tt.expected {
 				t.Errorf("expected %v, got %v", tt.expected, result)
+			}
+		})
+	}
+}
+
+func TestClassifier_HyphenatedIncludeIsNotExcludedByComponent(t *testing.T) {
+	classifier := New(config.KeywordConfig{
+		Include: []string{"machine-learning", "deep-learning"},
+		Exclude: []string{"learning"},
+	})
+	repos := []models.RepoMetadata{
+		{Name: "machine-learning"},
+		{Name: "deep-learning"},
+		{Name: "learning", Description: "machine-learning"},
+	}
+
+	result := classifier.Classify(repos)
+	if len(result) != 2 {
+		t.Fatalf("expected the two hyphenated include matches, got %#v", result)
+	}
+	if result[0].Metadata.Name != "machine-learning" || result[1].Metadata.Name != "deep-learning" {
+		t.Fatalf("unexpected classified repositories: %#v", result)
+	}
+}
+
+func TestClassifier_MatchesPunctuationBearingKeywordLiterally(t *testing.T) {
+	classifier := New(config.KeywordConfig{})
+	for _, tc := range []struct {
+		text    string
+		keyword string
+	}{
+		{text: "written in C++", keyword: "c++"},
+		{text: "an AI/ML platform", keyword: "AI/ML"},
+	} {
+		t.Run(tc.keyword, func(t *testing.T) {
+			if !classifier.matchesKeyword(tc.text, tc.keyword) {
+				t.Fatalf("%q should match literal keyword %q", tc.text, tc.keyword)
 			}
 		})
 	}

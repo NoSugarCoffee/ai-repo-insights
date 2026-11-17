@@ -50,9 +50,19 @@ func ValidateCopy(copy radar.Copy, cands []radar.Candidate) error {
 		if n := utf8.RuneCountInString(comment); n > maxCommentRunes {
 			return &CopyRuleError{Rule: "comment-length", Detail: fmt.Sprintf("comment for %s has %d runes, want at most %d", key, n, maxCommentRunes)}
 		}
+		name := strings.ToLower(strings.TrimSpace(cand.Repo.Metadata.Name))
+		if name != "" && strings.Contains(strings.ToLower(comment), name) {
+			return &CopyRuleError{Rule: "repository-name", Detail: fmt.Sprintf("comment for %s repeats repository name %q", key, cand.Repo.Metadata.Name)}
+		}
 		texts["comment for "+key] = comment
 	}
 	for where, text := range texts {
+		if strings.ContainsAny(text, "!！") {
+			return &CopyRuleError{Rule: "exclamation-mark", Detail: where + " contains an exclamation mark"}
+		}
+		if strings.Contains(text, "这是一个") {
+			return &CopyRuleError{Rule: "boilerplate-opening", Detail: where + " contains \"这是一个\""}
+		}
 		for _, word := range bannedWords {
 			if strings.Contains(text, word) {
 				return &CopyRuleError{Rule: "banned-word", Detail: fmt.Sprintf("%s contains %q", where, word)}
@@ -65,8 +75,8 @@ func ValidateCopy(copy radar.Copy, cands []radar.Candidate) error {
 // WriteRadarCopy asks the LLM for the issue's headline, summary and comments.
 // An attempt that fails to call, parse or validate is retried; when every
 // attempt fails the last error is returned and no fallback text is produced.
-func (c *Client) WriteRadarCopy(cands []radar.Candidate, guide string) (radar.Copy, error) {
-	prompt := buildRadarPrompt(cands, guide)
+func (c *Client) WriteRadarCopy(cands []radar.Candidate, guide, domain string) (radar.Copy, error) {
+	prompt := buildRadarPrompt(cands, guide, domain)
 	var lastErr error
 	for attempt := 0; attempt <= c.config.MaxRetries; attempt++ {
 		if attempt > 0 {
@@ -117,7 +127,7 @@ type promptRepo struct {
 	Readme        string   `json:"readme"`
 }
 
-func buildRadarPrompt(cands []radar.Candidate, guide string) string {
+func buildRadarPrompt(cands []radar.Candidate, guide, domain string) string {
 	repos := make([]promptRepo, 0, len(cands))
 	for _, cand := range cands {
 		meta := cand.Repo.Metadata
@@ -142,7 +152,7 @@ func buildRadarPrompt(cands []radar.Candidate, guide string) string {
 	if len(cands) == 0 {
 		task = "本周没有新冒头的项目。写一个 headline，并用 summary 简短说明本周没有新项目上榜；comments 返回空对象。"
 	}
-	return fmt.Sprintf(`你在编辑「AI 开源雷达」周刊，读者是关注 AI 编程工具的开发者。严格遵守下面的写作规范。
+	return fmt.Sprintf(`你在编辑「%s 开源雷达」周刊，读者是关注 %s 开源项目的开发者。严格遵守下面的写作规范。
 
 <writing-guide>
 %s
@@ -154,5 +164,5 @@ func buildRadarPrompt(cands []radar.Candidate, guide string) string {
 %s
 
 只输出 JSON，不要其他文字，格式：
-{"headline":"…","summary":"…","comments":{"owner/repo":"…"}}`, strings.TrimSpace(guide), task, data)
+{"headline":"…","summary":"…","comments":{"owner/repo":"…"}}`, domain, domain, strings.TrimSpace(guide), task, data)
 }

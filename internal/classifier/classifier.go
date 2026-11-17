@@ -60,8 +60,18 @@ func (c *Classifier) matchesInclude(repo models.RepoMetadata) bool {
 func (c *Classifier) matchesExclude(repo models.RepoMetadata) bool {
 	searchText := c.buildSearchText(repo)
 
+	// A configured compound include is one signal, not a sequence of
+	// standalone exclusions. Mask it before evaluating exclusions so, for
+	// example, "learning" does not reject "machine-learning".
+	excludeText := searchText
+	for _, include := range c.keywords.Include {
+		include = strings.ToLower(include)
+		if strings.Contains(include, "-") {
+			excludeText = strings.ReplaceAll(excludeText, include, strings.Repeat(" ", len(include)))
+		}
+	}
 	for _, keyword := range c.keywords.Exclude {
-		if c.matchesKeyword(searchText, keyword) {
+		if c.matchesKeyword(excludeText, keyword) {
 			return true
 		}
 	}
@@ -74,8 +84,11 @@ func (c *Classifier) matchesKeyword(text string, keyword string) bool {
 	keyword = strings.ToLower(keyword)
 	text = strings.ToLower(text)
 
-	// For hyphenated keywords like "machine-learning", match as-is
-	if strings.Contains(keyword, "-") {
+	// Configured punctuation is significant (for example c++, AI/ML, and
+	// machine-learning), so preserve it through a literal-match path.
+	if strings.IndexFunc(keyword, func(r rune) bool {
+		return !unicode.IsLetter(r) && !unicode.IsDigit(r)
+	}) >= 0 {
 		return strings.Contains(text, keyword)
 	}
 

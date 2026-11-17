@@ -28,7 +28,7 @@ type Deps struct {
 		Readme(context.Context, string) (string, error)
 	}
 	Copy interface {
-		WriteRadarCopy([]radar.Candidate, string) (radar.Copy, error)
+		WriteRadarCopy([]radar.Candidate, string, string) (radar.Copy, error)
 	}
 	History *history.Manager
 	OutDir  string
@@ -71,7 +71,7 @@ func Run(ctx context.Context, cfg config.Config, deps Deps, logger zerolog.Logge
 		cands = append(cands, radar.Assign(repo, details, readme, deps.Now, cfg.Settings.NewRepoThresholdDays))
 	}
 
-	copy, err := deps.Copy.WriteRadarCopy(cands, cfg.WritingGuide)
+	copy, err := deps.Copy.WriteRadarCopy(cands, cfg.WritingGuide, cfg.Settings.FilterDomain)
 	if err != nil {
 		return "", err
 	}

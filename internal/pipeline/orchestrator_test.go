@@ -33,15 +33,17 @@ func (f fakeGitHub) Repo(_ context.Context, name string) (githubapi.RepoDetails,
 func (f fakeGitHub) Readme(context.Context, string) (string, error) { return "readme", nil }
 
 type fakeCopy struct {
-	err   error
-	calls int
-	seen  int
-	hook  func()
+	err    error
+	calls  int
+	seen   int
+	domain string
+	hook   func()
 }
 
-func (f *fakeCopy) WriteRadarCopy(cands []radar.Candidate, _ string) (radar.Copy, error) {
+func (f *fakeCopy) WriteRadarCopy(cands []radar.Candidate, _ string, domain string) (radar.Copy, error) {
 	f.calls++
 	f.seen = len(cands)
+	f.domain = domain
 	if f.hook != nil {
 		f.hook()
 	}
@@ -100,7 +102,7 @@ func newFixture(t *testing.T, seenKeys ...string) fixture {
 }
 
 func testConfig() config.Config {
-	return config.Config{Settings: config.Settings{NewRepoThresholdDays: 30}, WritingGuide: "guide"}
+	return config.Config{Settings: config.Settings{NewRepoThresholdDays: 30, FilterDomain: "DevOps"}, WritingGuide: "guide"}
 }
 
 func TestRunWritesIssueAndUpdatesHistory(t *testing.T) {
@@ -111,6 +113,9 @@ func TestRunWritesIssueAndUpdatesHistory(t *testing.T) {
 	}
 	if filepath.Base(path) != "2026-W47.json" {
 		t.Fatalf("path %s", path)
+	}
+	if f.copy.domain != "DevOps" {
+		t.Fatalf("copy domain = %q, want DevOps", f.copy.domain)
 	}
 	data, _ := os.ReadFile(path)
 	var issue radar.Issue
