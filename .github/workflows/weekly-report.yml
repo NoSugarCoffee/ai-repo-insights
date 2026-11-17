@@ -8,10 +8,11 @@ on:
   # Allow manual triggering
   workflow_dispatch:
     inputs:
-      report_id:
-        description: 'Custom report ID (optional)'
+      dispatch_only:
+        description: 'Retry only the site dispatch after a report was published'
         required: false
-        type: string
+        default: false
+        type: boolean
       log_level:
         description: 'Log level'
         required: false
@@ -23,9 +24,17 @@ on:
           - warn
           - error
 
+# A scheduled and a manual run must never overlap: both would pick the same week.
+concurrency:
+  group: weekly-report
+  cancel-in-progress: false
+
 jobs:
-  generate-report:
+  generate_report:
+    if: ${{ !inputs.dispatch_only }}
     runs-on: ubuntu-latest
+    outputs:
+      published: ${{ steps.publish.outputs.published }}
     
     permissions:
       contents: write
@@ -37,7 +46,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v5
         with:
-          go-version: '1.21'
+          go-version-file: go.mod
       
       - name: Cache Go modules
         uses: actions/cache@v4
@@ -55,25 +64,14 @@ jobs:
       - name: Build application
         run: go build -o ai-repo-insights ./cmd/ai-repo-insights/
       
-      - name: Create data directories
-        run: |
-          mkdir -p data/trending_raw
-          mkdir -p data/stars_raw
-          mkdir -p data/summaries
-          mkdir -p reports
-      
       - name: Generate report
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-        run: |
-          if [ -n "${{ github.event.inputs.report_id }}" ]; then
-            ./ai-repo-insights -weekly -report-id "${{ github.event.inputs.report_id }}" -log-level "${{ github.event.inputs.log_level || 'info' }}"
-          else
-            ./ai-repo-insights -weekly -log-level "${{ github.event.inputs.log_level || 'info' }}"
-          fi
-      
+        run: ./ai-repo-insights -log-level "${{ github.event.inputs.log_level || 'info' }}"
+
       - name: Commit and push report
+        id: publish
         run: |
           git config --local user.email "github-actions[bot]@users.noreply.github.com"
           git config --local user.name "github-actions[bot]"
@@ -82,24 +80,44 @@ jobs:
           REPORT_DATE=$(date +%Y-%m-%d)
           
           # Add generated files
-          git add reports/
-          git add data/history.json
-          git add data/summaries/
+          git add data/weekly/ data/history.json
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
             echo "No changes to commit"
+            echo "published=false" >> "$GITHUB_OUTPUT"
           else
-            git commit -m "Add weekly report for $REPORT_DATE"
+            git commit -m "Add weekly radar issue for $REPORT_DATE"
             git push
+            echo "published=true" >> "$GITHUB_OUTPUT"
           fi
-      
+
       - name: Upload report as artifact
         uses: actions/upload-artifact@v4
+        continue-on-error: true
         if: always()
         with:
           name: weekly-report
           path: |
-            reports/*.md
-            data/summaries/*.json
+            data/weekly/*.json
           retention-days: 90
+
+  trigger_site_deploy:
+    needs: generate_report
+    if: ${{ always() && ((needs.generate_report.result == 'success' && needs.generate_report.outputs.published == 'true') || (github.event_name == 'workflow_dispatch' && inputs.dispatch_only)) }}
+    runs-on: ubuntu-latest
+    steps:
+      # A push made with GITHUB_TOKEN starts no other workflow, so the site
+      # deploy is requested directly. DEPLOY_TOKEN should be a fine-grained
+      # token restricted to NoSugarCoffee/NoSugarCoffee.github.io with
+      # repository Contents permission set to Read and write.
+      - name: Trigger site deploy
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.DEPLOY_TOKEN }}
+          script: |
+            await github.rest.repos.createDispatchEvent({
+              owner: 'NoSugarCoffee',
+              repo: 'NoSugarCoffee.github.io',
+              event_type: 'radar-updated',
+            });

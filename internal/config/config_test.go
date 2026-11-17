@@ -96,6 +96,9 @@ func TestDefaultValues(t *testing.T) {
 	if err := os.WriteFile(filepath.Join(tmpDir, "llm.json"), []byte(llmJSON), 0644); err != nil {
 		t.Fatalf("Failed to write llm.json: %v", err)
 	}
+	if err := os.WriteFile(filepath.Join(tmpDir, "writing-guide.md"), []byte("rules"), 0644); err != nil {
+		t.Fatalf("Failed to write writing-guide.md: %v", err)
+	}
 
 	// Load config
 	config, err := Load(tmpDir)
@@ -447,10 +450,10 @@ func TestValidation(t *testing.T) {
 					Categories: map[string][]string{"test": {"test"}},
 				},
 				Settings: Settings{
-					WindowDays:      0,  // Invalid: must be > 0
+					WindowDays:      0, // Invalid: must be > 0
 					ShortWindowDays: 30,
 					TopN:            -1, // Invalid: must be > 0
-					ReportLanguage:  "",  // Invalid: empty
+					ReportLanguage:  "", // Invalid: empty
 					FilterDomain:    "Test",
 				},
 				LLM: LLMConfig{
@@ -509,4 +512,54 @@ func containsHelper(s string, substr string) bool {
 		}
 	}
 	return false
+}
+
+func TestConfigRequiresWritingGuide(t *testing.T) {
+	dir := t.TempDir()
+	for _, name := range []string{"languages.json", "keywords.json", "settings.json", "llm.json"} {
+		data, err := os.ReadFile(filepath.Join("../../config", name))
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := os.WriteFile(filepath.Join(dir, name), data, 0o644); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if _, err := Load(dir); err == nil {
+		t.Fatal("expected an error when writing-guide.md is missing")
+	}
+	if err := os.WriteFile(filepath.Join(dir, "writing-guide.md"), []byte("  \n"), 0o644); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := Load(dir); err == nil {
+		t.Fatal("expected an error when writing-guide.md is empty")
+	}
+}
+
+func TestLoadReadsWritingGuide(t *testing.T) {
+	want, err := os.ReadFile("../../config/writing-guide.md")
+	if err != nil {
+		t.Fatal(err)
+	}
+	cfg, err := Load("../../config")
+	if err != nil {
+		t.Fatal(err)
+	}
+	if cfg.WritingGuide != string(want) {
+		t.Fatalf("WritingGuide was not loaded verbatim")
+	}
+}
+
+func TestExampleConfigurationsAreComplete(t *testing.T) {
+	for _, dir := range []string{"../../examples/devops", "../../examples/web-frameworks"} {
+		t.Run(filepath.Base(dir), func(t *testing.T) {
+			cfg, err := Load(dir)
+			if err != nil {
+				t.Fatal(err)
+			}
+			if errs := cfg.Validate(); len(errs) != 0 {
+				t.Fatalf("invalid example config: %v", errs)
+			}
+		})
+	}
 }

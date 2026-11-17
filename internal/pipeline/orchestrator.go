@@ -1,216 +1,105 @@
+// Package pipeline runs one weekly radar issue end to end.
 package pipeline
 
 import (
+	"context"
+	"errors"
 	"fmt"
 	"os"
 	"time"
 
 	"github.com/rs/zerolog"
 
-	"ai-repo-insights/internal/calculator"
-	"ai-repo-insights/internal/classifier"
 	"ai-repo-insights/internal/config"
-	apperrors "ai-repo-insights/internal/errors"
-	"ai-repo-insights/internal/fetcher"
+	"ai-repo-insights/internal/githubapi"
 	"ai-repo-insights/internal/history"
-	"ai-repo-insights/internal/llm"
 	"ai-repo-insights/internal/models"
-	"ai-repo-insights/internal/report"
-	"ai-repo-insights/internal/summary"
+	"ai-repo-insights/internal/radar"
 )
 
-// Orchestrator executes complete workflow with error handling and logging
-type Orchestrator struct {
-	config config.Config
-	logger zerolog.Logger
+// Deps are the pipeline's external systems, injected so tests can fake them.
+type Deps struct {
+	Trending interface {
+		FetchTrending() ([]models.RepoMetadata, error)
+	}
+	Classify func([]models.RepoMetadata) []models.ClassifiedRepo
+	GitHub   interface {
+		Repo(context.Context, string) (githubapi.RepoDetails, error)
+		Readme(context.Context, string) (string, error)
+	}
+	Copy interface {
+		WriteRadarCopy([]radar.Candidate, string, string) (radar.Copy, error)
+	}
+	History *history.Manager
+	OutDir  string
+	Now     time.Time
 }
 
-// NewOrchestrator creates a new pipeline orchestrator
-func NewOrchestrator(cfg config.Config, logger zerolog.Logger) *Orchestrator {
-	return &Orchestrator{
-		config: cfg,
-		logger: logger,
-	}
-}
+// Run fetches this week's trending AI repositories, writes the issue file and
+// returns its path. History is saved only after the issue is written, so a
+// failed run leaves no trace and can simply be re-run.
+func Run(ctx context.Context, cfg config.Config, deps Deps, logger zerolog.Logger) (string, error) {
+	reportID := radar.ReportID(deps.Now)
+	logger.Info().Str("report_id", reportID).Msg("starting radar run")
 
-// RunPipeline executes complete pipeline
-func (o *Orchestrator) RunPipeline(reportID string) (models.PipelineResult, error) {
-	o.logger.Info().Str("report_id", reportID).Msg("starting pipeline execution")
-	pipelineStart := time.Now()
-
-	// Generate report ID if not provided
-	if reportID == "" {
-		reportID = o.generateReportID()
-	}
-
-	// 1. Fetch trending
-	stepStart := time.Now()
-	o.logger.Info().Msg("step 1: fetching trending repositories")
-	
-	trendingFetcher := fetcher.New(o.config.Languages, o.logger)
-	now := time.Now()
-	trendingRepos, err := trendingFetcher.FetchTrending()
+	trending, err := deps.Trending.FetchTrending()
 	if err != nil {
-		return models.PipelineResult{Success: false, Error: err.Error()}, 
-			apperrors.NewDataFetchError("failed to fetch trending data", err)
+		return "", fmt.Errorf("fetch trending: %w", err)
 	}
-	
-	if err := trendingFetcher.SaveRaw(trendingRepos, now); err != nil {
-		o.logger.Warn().Err(err).Msg("failed to save raw trending data")
-	}
-	
-	o.logger.Info().
-		Int("repo_count", len(trendingRepos)).
-		Dur("duration", time.Since(stepStart)).
-		Msg("step 1 completed")
-
-	// 2. Classify repos
-	stepStart = time.Now()
-	o.logger.Info().Msg("step 2: classifying repositories")
-	
-	repoClassifier := classifier.New(o.config.Keywords)
-	classifiedRepos := repoClassifier.Classify(trendingRepos)
-	
-	o.logger.Info().
-		Int("classified_count", len(classifiedRepos)).
-		Dur("duration", time.Since(stepStart)).
-		Msg("step 2 completed")
-
-	if len(classifiedRepos) == 0 {
-		return models.PipelineResult{Success: false, Error: "no repositories matched filter criteria"},
-			fmt.Errorf("no repositories matched filter criteria")
+	classified := deps.Classify(trending)
+	if len(classified) == 0 {
+		return "", fmt.Errorf("no trending repository matched the AI keyword filter (fetched %d); check config/keywords.json and the trending scraper", len(trending))
 	}
 
-	// 3. Calculate scores
-	stepStart = time.Now()
-	o.logger.Info().Msg("step 3: calculating scores")
-	
-	calc := calculator.New(o.config.Settings.WindowDays, o.config.Settings.ShortWindowDays)
-	scoredRepos := calc.CalculateScores(classifiedRepos)
-	topRepos := calc.RankAndSelectTop(scoredRepos, o.config.Settings.TopN)
-	
-	o.logger.Info().
-		Int("top_count", len(topRepos)).
-		Dur("duration", time.Since(stepStart)).
-		Msg("step 3 completed")
-
-	// 4. Update history
-	stepStart = time.Now()
-	o.logger.Info().Msg("step 4: updating history")
-	
-	now = time.Now()
-	runDate := now.Format("2006-01-02")
-	historyManager := history.NewManager("data/history.json", o.logger)
-	hist, err := historyManager.LoadHistory()
+	hist, err := deps.History.LoadHistory()
 	if err != nil {
-		o.logger.Warn().Err(err).Msg("failed to load history, starting fresh")
-		hist = models.NewHistory()
+		return "", fmt.Errorf("load history: %w", err)
 	}
-	
-	hist, err = historyManager.UpdateHistory(topRepos, reportID, runDate)
-	if err != nil {
-		o.logger.Warn().Err(err).Msg("failed to update history")
-	}
-	
-	if err := historyManager.SaveHistory(hist); err != nil {
-		o.logger.Warn().Err(err).Msg("failed to save history")
-	}
-	
-	o.logger.Info().
-		Dur("duration", time.Since(stepStart)).
-		Msg("step 4 completed")
+	unseen := radar.Unseen(classified, hist)
+	logger.Info().Int("trending_ai", len(classified)).Int("unseen", len(unseen)).Msg("selected unseen repositories")
 
-	// 5. Build summary
-	stepStart = time.Now()
-	o.logger.Info().Msg("step 5: building summary")
-	
-	summaryBuilder := summary.NewBuilder(o.config.Settings)
-	summaryJSON := summaryBuilder.BuildSummary(topRepos, hist, runDate)
-	
-	o.logger.Info().
-		Dur("duration", time.Since(stepStart)).
-		Msg("step 5 completed")
-
-	// 6. Call LLM
-	stepStart = time.Now()
-	o.logger.Info().Msg("step 6: calling LLM for analysis")
-	
-	llmAPIKey := os.Getenv("LLM_API_KEY")
-	if llmAPIKey == "" {
-		o.logger.Warn().Msg("LLM_API_KEY not set, using template fallback")
-	}
-	
-	var llmOutput models.LLMOutput
-	if llmAPIKey != "" {
-		llmClient := llm.NewClient(o.config.LLM, llmAPIKey, o.logger)
-		llmOutput, err = llmClient.GenerateAnalysis(summaryJSON, o.config.Settings.ReportLanguage)
+	cands := make([]radar.Candidate, 0, len(unseen))
+	for _, repo := range unseen {
+		details, err := deps.GitHub.Repo(ctx, repo.Key())
 		if err != nil {
-			o.logger.Warn().Err(err).Msg("LLM call failed, using template fallback")
-			llmOutput = llm.GenerateTemplateFallback(summaryJSON)
+			return "", err
 		}
-	} else {
-		llmOutput = llm.GenerateTemplateFallback(summaryJSON)
-	}
-	
-	o.logger.Info().
-		Dur("duration", time.Since(stepStart)).
-		Msg("step 6 completed")
-
-	// 7. Generate report
-	stepStart = time.Now()
-	o.logger.Info().Msg("step 7: generating report")
-	
-	reportGenerator := report.NewGenerator(o.config.Settings, o.config.Keywords)
-	reportContent := reportGenerator.GenerateReport(summaryJSON, llmOutput, reportID, o.config.Languages)
-	
-	if err := reportGenerator.SaveReport(reportContent, reportID); err != nil {
-		return models.PipelineResult{Success: false, Error: err.Error()},
-			apperrors.NewFilesystemError("failed to save report", "reports/"+reportID+".md", err)
-	}
-	
-	o.logger.Info().
-		Dur("duration", time.Since(stepStart)).
-		Msg("step 7 completed")
-
-	// 8. Save summary backup
-	if err := o.saveSummaryBackup(summaryJSON, reportID); err != nil {
-		o.logger.Warn().Err(err).Msg("failed to save summary backup")
+		readme, err := deps.GitHub.Readme(ctx, repo.Key())
+		if err != nil {
+			return "", err
+		}
+		cands = append(cands, radar.Assign(repo, details, readme, deps.Now, cfg.Settings.NewRepoThresholdDays))
 	}
 
-	// Pipeline complete
-	o.logger.Info().
-		Str("report_id", reportID).
-		Dur("total_duration", time.Since(pipelineStart)).
-		Msg("pipeline execution completed successfully")
-
-	return models.PipelineResult{
-		Success:  true,
-		ReportID: reportID,
-	}, nil
-}
-
-// generateReportID generates report ID based on configured format
-func (o *Orchestrator) generateReportID() string {
-	now := time.Now()
-	
-	// For now, use simple YYYY-MM-DD format
-	// TODO: Implement format parsing for YYYY-MM-weekN
-	return now.Format("2006-01-02")
-}
-
-// saveSummaryBackup saves summary JSON to data/summaries/
-func (o *Orchestrator) saveSummaryBackup(summaryJSON models.SummaryJSON, reportID string) error {
-	summariesDir := "data/summaries"
-	if err := os.MkdirAll(summariesDir, 0755); err != nil {
-		return err
-	}
-
-	filename := fmt.Sprintf("%s/%s.json", summariesDir, reportID)
-	
-	data, err := models.MarshalJSON(summaryJSON)
+	copy, err := deps.Copy.WriteRadarCopy(cands, cfg.WritingGuide, cfg.Settings.FilterDomain)
 	if err != nil {
-		return err
+		return "", err
 	}
 
-	return os.WriteFile(filename, data, 0644)
+	path, err := radar.WriteIssue(deps.OutDir, radar.BuildIssue(deps.Now, cands, copy))
+	if err != nil {
+		return "", err
+	}
+
+	keys := make([]string, 0, len(classified))
+	for _, repo := range classified {
+		keys = append(keys, repo.Key())
+	}
+	updated, err := deps.History.UpdateHistory(keys, reportID, deps.Now.UTC().Format("2006-01-02"))
+	if err != nil {
+		return "", rollbackIssue(path, fmt.Errorf("update history after writing %s: %w", path, err))
+	}
+	if err := deps.History.SaveHistory(updated); err != nil {
+		return "", rollbackIssue(path, fmt.Errorf("save history after writing %s: %w", path, err))
+	}
+
+	logger.Info().Str("issue", path).Int("candidates", len(cands)).Msg("radar run completed")
+	return path, nil
+}
+
+func rollbackIssue(path string, cause error) error {
+	if err := os.Remove(path); err != nil && !errors.Is(err, os.ErrNotExist) {
+		return errors.Join(cause, fmt.Errorf("remove issue %s after history failure: %w", path, err))
+	}
+	return cause
 }

@@ -3,14 +3,11 @@ package fetcher
 import (
 	"encoding/json"
 	"os"
-	"strings"
 	"testing"
 	"time"
 
 	"ai-repo-insights/internal/logging"
 	"ai-repo-insights/internal/models"
-
-	"github.com/PuerkitoBio/goquery"
 )
 
 // TestNew tests the creation of a new TrendingFetcher
@@ -28,7 +25,7 @@ func TestNew(t *testing.T) {
 		t.Errorf("Expected 2 languages, got %d", len(fetcher.languages))
 	}
 
-	if fetcher.httpClient == nil {
+	if fetcher.client == nil {
 		t.Error("Expected non-nil HTTP client")
 	}
 }
@@ -86,108 +83,9 @@ func TestParseStarCount(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			result := fetcher.parseStarCount(tt.input)
+			result := fetcher.parseStars(tt.input)
 			if result != tt.expected {
 				t.Errorf("parseStarCount(%q) = %d, want %d", tt.input, result, tt.expected)
-			}
-		})
-	}
-}
-
-// TestExtractRepoMetadata tests extracting metadata from HTML
-func TestExtractRepoMetadata(t *testing.T) {
-	logger := logging.NewLogger("info")
-	fetcher := New([]string{"go"}, logger)
-
-	// Sample HTML structure similar to GitHub trending
-	html := `
-	<article class="Box-row">
-		<h2 class="h3">
-			<a href="/owner/repo">owner / repo</a>
-		</h2>
-		<p class="col-9">This is a test repository description</p>
-		<a class="topic-tag">golang</a>
-		<a class="topic-tag">testing</a>
-		<span class="d-inline-block float-sm-right">1,234</span>
-	</article>
-	`
-
-	doc, err := goquery.NewDocumentFromReader(strings.NewReader(html))
-	if err != nil {
-		t.Fatalf("Failed to parse HTML: %v", err)
-	}
-
-	selection := doc.Find("article.Box-row").First()
-	repo, err := fetcher.extractRepoMetadata(selection, "go")
-
-	if err != nil {
-		t.Fatalf("extractRepoMetadata failed: %v", err)
-	}
-
-	if repo.Owner != "owner" {
-		t.Errorf("Expected owner 'owner', got '%s'", repo.Owner)
-	}
-
-	if repo.Name != "repo" {
-		t.Errorf("Expected name 'repo', got '%s'", repo.Name)
-	}
-
-	if repo.URL != "https://github.com/owner/repo" {
-		t.Errorf("Expected URL 'https://github.com/owner/repo', got '%s'", repo.URL)
-	}
-
-	if repo.Language != "go" {
-		t.Errorf("Expected language 'go', got '%s'", repo.Language)
-	}
-
-	if repo.Description != "This is a test repository description" {
-		t.Errorf("Expected description 'This is a test repository description', got '%s'", repo.Description)
-	}
-
-	if len(repo.Topics) != 2 {
-		t.Errorf("Expected 2 topics, got %d", len(repo.Topics))
-	}
-
-	if repo.Stars != 1234 {
-		t.Errorf("Expected 1234 stars, got %d", repo.Stars)
-	}
-}
-
-// TestExtractRepoMetadataInvalidHref tests error handling for invalid href
-func TestExtractRepoMetadataInvalidHref(t *testing.T) {
-	logger := logging.NewLogger("info")
-	fetcher := New([]string{"go"}, logger)
-
-	tests := []struct {
-		name string
-		html string
-	}{
-		{
-			"missing link",
-			`<article class="Box-row"><h2 class="h3"></h2></article>`,
-		},
-		{
-			"invalid href format",
-			`<article class="Box-row"><h2 class="h3"><a href="/invalid">test</a></h2></article>`,
-		},
-		{
-			"no href attribute",
-			`<article class="Box-row"><h2 class="h3"><a>test</a></h2></article>`,
-		},
-	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			doc, err := goquery.NewDocumentFromReader(strings.NewReader(tt.html))
-			if err != nil {
-				t.Fatalf("Failed to parse HTML: %v", err)
-			}
-
-			selection := doc.Find("article.Box-row").First()
-			_, err = fetcher.extractRepoMetadata(selection, "go")
-
-			if err == nil {
-				t.Error("Expected error for invalid HTML, got nil")
 			}
 		})
 	}

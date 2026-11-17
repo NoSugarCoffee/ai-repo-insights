@@ -4,7 +4,7 @@
 
 [![Go Version](https://img.shields.io/badge/go-1.24%2B-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-green.svg)](cmd/ai-repo-insights/main.go)
+[![Version](https://img.shields.io/badge/version-2.0.0-green.svg)](cmd/ai-repo-insights/main.go)
 
 **🔭 Automatically track, rank, and report on GitHub's trending repositories — filtered to topics that matter to you 📊**
 
@@ -16,79 +16,77 @@
 
 ```bash
 # 1. Clone and build
-git clone https://github.com/your-org/ai-repo-insights.git
+git clone https://github.com/NoSugarCoffee/ai-repo-insights.git
 cd ai-repo-insights
 go build -o ai-repo-insights ./cmd/ai-repo-insights
 
-# 2. Set environment variables
-export GITHUB_TOKEN=ghp_...       # Required for star history fetching
-export LLM_API_KEY=sk-...         # Optional: enables AI-generated commentary
+# 2. Set environment variables (both required)
+export GITHUB_TOKEN=ghp_...   # repository details and README excerpts
+export LLM_API_KEY=your-google-ai-key  # Gemini key for the default config
 
 # 3. Run
 ./ai-repo-insights
 ```
 
-Output written to `reports/` and `data/summaries/`.
+Each run writes one issue of the **AI 开源雷达** to `data/weekly/<YYYY-Www>.json` (ISO week, e.g. `2026-W47`) and records every repository it saw in `data/history.json`. The site [NoSugarCoffee.github.io](https://nosugarcoffee.github.io/radar) renders the issues at `/radar`.
 
 ---
 
-## ✨ Features
+## ✨ How an issue is built
 
-- **🤖 Automated Trending Tracking** — Scrapes GitHub trending (daily, weekly, monthly) across configurable languages
-- **🏷️ Smart Classification** — Categorizes repositories by configurable include/exclude keywords and category mappings
-- **📈 Scoring System** — Ranks repos using a weighted formula combining daily, weekly, and monthly star data
-- **🕰️ Historical Tracking** — Monitors consecutive appearances in top rankings across runs
-- **🧠 LLM-Enhanced Reports** — Generates analytical commentary via OpenAI or Gemini; falls back to templates when no key is set
-- **🔧 Flexible Configuration** — Fully customizable through JSON config files; swap domains with a single flag
+1. **Fetch** GitHub trending (daily, weekly and monthly pages) for the configured languages, and keep the repositories that match the AI keywords.
+2. **Skip** every repository already in `data/history.json`: each repository is shown once, in the week it first surfaces.
+3. **Look up** each remaining repository through the GitHub REST API: creation date, stars, topics and the first 4000 characters of its README.
+4. **Split** them into two columns:
+   - 🆕 `newProjects`: created within `new_repo_threshold_days` (30) of the run;
+   - ↗ `newEntries`: older repositories on the list for the first time (at most 15 shown).
+5. **Write** the headline, summary and one comment per repository with the LLM, following `config/writing-guide.md`. The copy is checked for length limits and banned words, and retried if it fails.
+6. **Save** the issue, then update history.
 
-## 📊 Metrics
+**If the LLM call fails** (including exhausted credits), **the run fails and publishes nothing**. There is no template fallback. Fix the key or credits and re-run; history is untouched by a failed run.
 
-| Metric | Description |
-|--------|-------------|
-| **Heat_7** | Stars gained in the last 7 days (from GitHub trending) |
-| **Heat_30** | Stars gained in the last 30 days (from GitHub trending) |
-| **Score** | `0.6 × stars_today + 0.3 × (stars_week / 7) + 0.1 × (stars_month / 30)` |
+### Issue format
 
-Repositories are ranked primarily by **Heat_30** (descending), with **Score** as a tiebreaker. The formula emphasizes recent activity (60%) while rewarding sustained trends (40%).
+```json
+{
+  "schemaVersion": 1,
+  "id": "2026-W47", "year": 2026, "week": 47,
+  "generatedAt": "2026-11-16T04:46:00Z",
+  "headline": "Agent 技能包扎堆",
+  "summary": "…",
+  "newProjects": [{
+    "source": "github", "id": "owner/repo", "url": "https://github.com/owner/repo",
+    "name": "repo", "description": "…", "comment": "…", "language": "typescript",
+    "createdAt": "2026-10-30T00:00:00Z", "stars": 19546,
+    "starsThisWeek": 4234, "starsThisMonth": null
+  }],
+  "newEntries": []
+}
+```
+
+`starsThisWeek` and `starsThisMonth` are `null` when the scraper reports zero or cannot parse a positive delta. This normally means the repository was absent from that trending page; an actual zero and an unknown value are not distinguished.
 
 ---
 
 ## 🚀 Usage
-
-```bash
-# Daily report (default)
-./ai-repo-insights
-
-# Weekly report (uses YYYY-MM-weekN ID format)
-./ai-repo-insights -weekly
-
-# Custom config directory
-./ai-repo-insights -config examples/web-frameworks
-
-# Custom report ID
-./ai-repo-insights -report-id 2026-04-week18
-
-# Debug logging
-./ai-repo-insights -log-level debug
-```
 
 ### CLI Flags
 
 | Flag | Default | Description |
 |------|---------|-------------|
 | `-config` | `config` | Path to configuration directory |
-| `-report-id` | auto | Custom report ID (overrides auto-generation) |
-| `-weekly` | `false` | Use week-based report ID format (`YYYY-MM-weekN`) |
+| `-out` | `data/weekly` | Where the issue JSON is written |
+| `-history` | `data/history.json` | Repository history file |
 | `-log-level` | `info` | Log level: `debug`, `info`, `warn`, `error` |
 | `-version` | — | Print version and exit |
-| `-help` | — | Print usage and exit |
 
-### Environment Variables
+### Scheduled run
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `GITHUB_TOKEN` | ⚠️ Recommended | GitHub API token — star history fetching fails without it |
-| `LLM_API_KEY` | Optional | API key for LLM service (OpenAI or Gemini); uses template reports if unset |
+`.github/workflows/weekly-report.yml` runs every Monday 00:00 UTC (and on manual dispatch). It commits the new issue and history, then sends a `radar-updated` repository dispatch to the site so it redeploys. `DEPLOY_TOKEN` should be a fine-grained personal access token restricted to `NoSugarCoffee/NoSugarCoffee.github.io`, with repository **Contents: Read and write** permission. If publication succeeds but dispatch fails, manually run the workflow with `dispatch_only` enabled; this retries the dispatch without regenerating the non-overwritable weekly issue.
+
+### Backfilling history
+
+`go run ./cmd/backfill-history -reports reports -history data/history.json` records the first-seen week of every repository in the old Markdown reports under `reports/`. It was run once when the radar replaced those reports.
 
 ---
 
@@ -101,7 +99,8 @@ All configuration lives in JSON files under `config/` (or a custom directory via
 | `languages.json` | Programming languages to track |
 | `keywords.json` | Include/exclude keywords and category mappings |
 | `settings.json` | Operational parameters (`top_n`, `window_days`, `report_language`, etc.) |
-| `llm.json` | LLM API settings (`base_url`, `model`, `temperature`, etc.) |
+| `llm.json` | LLM API settings (`base_url`, `model`, `provider`, `temperature`, etc.) |
+| `writing-guide.md` | Writing rules sent verbatim to the LLM; required |
 
 See [docs/configuration.md](docs/configuration.md) for full reference.
 
@@ -120,7 +119,7 @@ Pre-built configs for different tracking domains:
 ./ai-repo-insights -config examples/devops
 ```
 
-See [examples/README.md](examples/README.md) for how to create custom domain configs.
+Each example directory contains every required configuration file. See [examples/README.md](examples/README.md) for how to create custom domain configs.
 
 ---
 
@@ -129,28 +128,22 @@ See [examples/README.md](examples/README.md) for how to create custom domain con
 ```
 ai-repo-insights/
 ├── cmd/
-│   └── ai-repo-insights/     # Main application entry point
+│   ├── ai-repo-insights/     # Weekly radar run
+│   └── backfill-history/     # One-off history backfill from old reports
 ├── internal/
-│   ├── config/               # Configuration management
-│   ├── errors/               # Error types and handling
-│   ├── logging/              # Structured logging
-│   ├── models/               # Core data models
+│   ├── config/               # Configuration and writing guide loading
 │   ├── fetcher/              # GitHub trending scraper
-│   ├── classifier/           # Keyword-based classifier
-│   ├── calculator/           # Score calculator
-│   ├── history/              # Historical tracking
-│   ├── summary/              # Summary builder
-│   ├── llm/                  # LLM client (OpenAI / Gemini)
-│   ├── report/               # Markdown report generator
-│   └── pipeline/             # Pipeline orchestrator
-├── config/                   # Default configuration files
-├── examples/                 # Domain-specific example configs
-├── data/                     # Runtime data storage
-│   ├── trending_raw/         # Cached raw trending data
-│   ├── stars_raw/            # Cached star history data
-│   ├── history.json          # Cross-run historical tracking
-│   └── summaries/            # Summary backups per report
-└── reports/                  # Generated markdown reports
+│   ├── classifier/           # Keyword-based AI filter
+│   ├── githubapi/            # GitHub REST client (created_at, README)
+│   ├── history/              # First-seen tracking
+│   ├── radar/                # Selection, issue model, JSON output
+│   ├── llm/                  # LLM client (OpenAI-compatible / Gemini) and copy rules
+│   └── pipeline/             # Run order
+├── config/                   # Default configuration and writing guide
+├── data/
+│   ├── weekly/               # One JSON file per issue
+│   └── history.json          # Every repository ever shown
+└── reports/                  # Markdown reports up to 2026-W47 (no longer generated)
 ```
 
 ## 🔨 Building

@@ -39,22 +39,18 @@ ai-repo-insights -config examples/devops
 To create a configuration for a new domain:
 
 1. Create a new directory: `examples/your-domain/`
-2. Copy the required files from an existing example
+2. Copy all five required files from an existing example
 3. Modify `keywords.json` with domain-specific keywords
 4. Update `settings.json` with the `filter_domain` name
-5. Optionally copy `languages.json` and `llm.json` from the main config
+5. Adapt `writing-guide.md` to the domain
 
 ### Required Files
 
 - `keywords.json` - Define include/exclude keywords and categories
 - `settings.json` - Configure analysis parameters and domain name
-
-### Optional Files
-
-If not provided, these will be loaded from the main `config/` directory:
-
 - `languages.json` - Programming languages to track
 - `llm.json` - LLM API configuration
+- `writing-guide.md` - Writing rules sent verbatim to the LLM
 
 ## Switching Between Configurations
 

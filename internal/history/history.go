@@ -49,6 +49,7 @@ func (m *Manager) LoadHistory() (*models.History, error) {
 	if history.History == nil {
 		history.History = make(map[string]models.RepoHistory)
 	}
+	history.History = normalizeHistory(history.History)
 
 	m.logger.Info().
 		Str("path", m.historyPath).
@@ -58,77 +59,44 @@ func (m *Manager) LoadHistory() (*models.History, error) {
 	return &history, nil
 }
 
-// UpdateHistory updates history with current rankings
-func (m *Manager) UpdateHistory(currentTop []models.ScoredRepo, reportID string, reportDate string) (*models.History, error) {
-	// Load existing history
+// UpdateHistory records that the given repositories appeared in reportID.
+// Repositories that are absent this week stay in history: "first seen" must
+// survive a repo dropping off the list and coming back.
+func (m *Manager) UpdateHistory(repoKeys []string, reportID string, reportDate string) (*models.History, error) {
 	history, err := m.LoadHistory()
 	if err != nil {
 		return nil, err
 	}
 
-	// Build set of current top repo keys
-	currentRepoKeys := make(map[string]bool)
-	for _, repo := range currentTop {
-		currentRepoKeys[repo.Key()] = true
-	}
-
-	// Update or initialize repos in current top
-	for _, repo := range currentTop {
-		repoKey := repo.Key()
-		
-		if existingHistory, exists := history.History[repoKey]; exists {
-			// Repo was in history, increment counter
-			existingHistory.WeeksInTop++
-			existingHistory.LastSeenReport = reportID
-			existingHistory.LastSeenDate = reportDate
-			history.History[repoKey] = existingHistory
-			
-			m.logger.Debug().
-				Str("repo", repoKey).
-				Int("weeks_in_top", existingHistory.WeeksInTop).
-				Msg("updated existing repo in history")
-		} else {
-			// New repo, initialize
-			history.History[repoKey] = models.RepoHistory{
-				WeeksInTop:      1,
-				LastSeenReport:  reportID,
-				LastSeenDate:    reportDate,
-				FirstSeenReport: reportID,
-				FirstSeenDate:   reportDate,
-			}
-			
-			m.logger.Debug().
-				Str("repo", repoKey).
-				Msg("added new repo to history")
+	seen := make(map[string]struct{}, len(repoKeys))
+	for _, rawKey := range repoKeys {
+		repoKey := models.NormalizeRepoKey(rawKey)
+		if _, duplicate := seen[repoKey]; duplicate {
+			continue
+		}
+		seen[repoKey] = struct{}{}
+		if existing, exists := history.History[repoKey]; exists {
+			existing.WeeksInTop++
+			existing.LastSeenReport = reportID
+			existing.LastSeenDate = reportDate
+			history.History[repoKey] = existing
+			continue
+		}
+		history.History[repoKey] = models.RepoHistory{
+			WeeksInTop:      1,
+			LastSeenReport:  reportID,
+			LastSeenDate:    reportDate,
+			FirstSeenReport: reportID,
+			FirstSeenDate:   reportDate,
 		}
 	}
 
-	// Remove repos not in current top (streak broken)
-	reposToRemove := []string{}
-	for repoKey := range history.History {
-		if !currentRepoKeys[repoKey] {
-			reposToRemove = append(reposToRemove, repoKey)
-		}
-	}
-
-	for _, repoKey := range reposToRemove {
-		weeks := history.History[repoKey].WeeksInTop
-		delete(history.History, repoKey)
-		
-		m.logger.Debug().
-			Str("repo", repoKey).
-			Int("final_weeks", weeks).
-			Msg("removed repo from history (streak broken)")
-	}
-
-	// Update latest report
 	history.LatestReport = reportID
 
 	m.logger.Info().
 		Str("report_id", reportID).
-		Int("current_top", len(currentTop)).
+		Int("seen_this_week", len(repoKeys)).
 		Int("tracked_repos", len(history.History)).
-		Int("removed_repos", len(reposToRemove)).
 		Msg("updated history")
 
 	return history, nil
@@ -136,6 +104,8 @@ func (m *Manager) UpdateHistory(currentTop []models.ScoredRepo, reportID string,
 
 // SaveHistory saves updated history to JSON file
 func (m *Manager) SaveHistory(history *models.History) error {
+	history.History = normalizeHistory(history.History)
+
 	// Ensure directory exists
 	dir := filepath.Dir(m.historyPath)
 	if err := os.MkdirAll(dir, 0755); err != nil {
@@ -157,4 +127,30 @@ func (m *Manager) SaveHistory(history *models.History) error {
 		Msg("saved history")
 
 	return nil
+}
+
+func normalizeHistory(entries map[string]models.RepoHistory) map[string]models.RepoHistory {
+	normalized := make(map[string]models.RepoHistory, len(entries))
+	for rawKey, entry := range entries {
+		key := models.NormalizeRepoKey(rawKey)
+		if existing, ok := normalized[key]; ok {
+			entry = mergeRepoHistory(existing, entry)
+		}
+		normalized[key] = entry
+	}
+	return normalized
+}
+
+func mergeRepoHistory(a, b models.RepoHistory) models.RepoHistory {
+	merged := a
+	merged.WeeksInTop += b.WeeksInTop
+	if merged.FirstSeenDate == "" || (b.FirstSeenDate != "" && b.FirstSeenDate < merged.FirstSeenDate) {
+		merged.FirstSeenReport = b.FirstSeenReport
+		merged.FirstSeenDate = b.FirstSeenDate
+	}
+	if b.LastSeenDate > merged.LastSeenDate {
+		merged.LastSeenReport = b.LastSeenReport
+		merged.LastSeenDate = b.LastSeenDate
+	}
+	return merged
 }
