@@ -151,3 +151,29 @@ func TestWriteRadarCopyRetryPromptNamesBrokenRule(t *testing.T) {
 		t.Fatalf("retry prompt should name the broken rule; prompts: %q", prompts)
 	}
 }
+
+func TestOpenAIRequestsSendSessionHeaderAndUserAgent(t *testing.T) {
+	var sessions, agents []string
+	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		sessions = append(sessions, r.Header.Get("x-opencode-session"))
+		agents = append(agents, r.Header.Get("User-Agent"))
+		if len(sessions) == 1 {
+			w.Write(openAIReply(`not json`))
+			return
+		}
+		w.Write(openAIReply(`{"headline":"新工具","summary":"摘要","comments":{"a/x":"给 agent 用的浏览器 CLI"}}`))
+	}))
+	defer srv.Close()
+
+	c := NewClient(config.LLMConfig{BaseURL: srv.URL, Model: "m", Provider: "openai", TimeoutSeconds: 5, MaxRetries: 1, SessionHeader: "x-opencode-session"}, "k", zerolog.Nop())
+	c.backoff = func(int) time.Duration { return 0 }
+	if _, err := c.WriteRadarCopy([]radar.Candidate{candidate("a", "x")}, "规范", "AI"); err != nil {
+		t.Fatal(err)
+	}
+	if len(sessions) != 2 || sessions[0] == "" || sessions[0] != sessions[1] {
+		t.Fatalf("want one stable session id across retries, got %q", sessions)
+	}
+	if !strings.HasPrefix(agents[0], "ai-repo-insights/") {
+		t.Fatalf("User-Agent %q", agents[0])
+	}
+}
