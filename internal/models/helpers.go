@@ -54,7 +54,6 @@ func NewRepoHistory(weeksInTop int, lastSeenReport string, lastSeenDate string, 
 	}
 }
 
-
 // NewMetaInfo creates a new MetaInfo instance
 func NewMetaInfo(runDate string, windowDays int, shortWindowDays int, topN int, filterDomain string) *MetaInfo {
 	return &MetaInfo{
@@ -191,7 +190,7 @@ func ParseRepoKey(key string) (owner string, name string, err error) {
 	var parsed [2]string
 	n := 0
 	start := 0
-	
+
 	for i := 0; i < len(key); i++ {
 		if key[i] == '/' {
 			if n >= 2 {
@@ -202,17 +201,23 @@ func ParseRepoKey(key string) (owner string, name string, err error) {
 			start = i + 1
 		}
 	}
-	
+
 	if n != 1 {
 		return "", "", fmt.Errorf("invalid repo key format: %s", key)
 	}
-	
+
 	parsed[n] = key[start:]
-	
+
 	return parsed[0], parsed[1], nil
 }
 
 // MarshalJSON marshals any value to JSON with indentation
 func MarshalJSON(v interface{}) ([]byte, error) {
 	return json.MarshalIndent(v, "", "  ")
+}
+
+// Seen reports whether the repository key has ever appeared in a report.
+func (h *History) Seen(key string) bool {
+	_, ok := h.History[key]
+	return ok
 }

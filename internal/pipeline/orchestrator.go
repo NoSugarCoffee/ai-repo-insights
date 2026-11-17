@@ -38,11 +38,6 @@ func (o *Orchestrator) RunPipeline(reportID string) (models.PipelineResult, erro
 	o.logger.Info().Str("report_id", reportID).Msg("starting pipeline execution")
 	pipelineStart := time.Now()
 
-	// Generate report ID if not provided
-	if reportID == "" {
-		reportID = o.generateReportID()
-	}
-
 	// 1. Fetch trending
 	stepStart := time.Now()
 	o.logger.Info().Msg("step 1: fetching trending repositories")
@@ -107,7 +102,11 @@ func (o *Orchestrator) RunPipeline(reportID string) (models.PipelineResult, erro
 		hist = models.NewHistory()
 	}
 	
-	hist, err = historyManager.UpdateHistory(topRepos, reportID, runDate)
+	topKeys := make([]string, 0, len(topRepos))
+	for _, repo := range topRepos {
+		topKeys = append(topKeys, repo.Key())
+	}
+	hist, err = historyManager.UpdateHistory(topKeys, reportID, runDate)
 	if err != nil {
 		o.logger.Warn().Err(err).Msg("failed to update history")
 	}
@@ -187,15 +186,6 @@ func (o *Orchestrator) RunPipeline(reportID string) (models.PipelineResult, erro
 		Success:  true,
 		ReportID: reportID,
 	}, nil
-}
-
-// generateReportID generates report ID based on configured format
-func (o *Orchestrator) generateReportID() string {
-	now := time.Now()
-	
-	// For now, use simple YYYY-MM-DD format
-	// TODO: Implement format parsing for YYYY-MM-weekN
-	return now.Format("2006-01-02")
 }
 
 // saveSummaryBackup saves summary JSON to data/summaries/

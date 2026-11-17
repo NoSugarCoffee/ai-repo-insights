@@ -68,9 +68,9 @@ jobs:
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
         run: |
           if [ -n "${{ github.event.inputs.report_id }}" ]; then
-            ./ai-repo-insights -weekly -report-id "${{ github.event.inputs.report_id }}" -log-level "${{ github.event.inputs.log_level || 'info' }}"
+            ./ai-repo-insights -report-id "${{ github.event.inputs.report_id }}" -log-level "${{ github.event.inputs.log_level || 'info' }}"
           else
-            ./ai-repo-insights -weekly -log-level "${{ github.event.inputs.log_level || 'info' }}"
+            ./ai-repo-insights -log-level "${{ github.event.inputs.log_level || 'info' }}"
           fi
       
       - name: Commit and push report

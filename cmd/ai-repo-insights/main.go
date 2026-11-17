@@ -9,6 +9,7 @@ import (
 	"ai-repo-insights/internal/config"
 	"ai-repo-insights/internal/logging"
 	"ai-repo-insights/internal/pipeline"
+	"ai-repo-insights/internal/radar"
 )
 
 const (
@@ -19,7 +20,6 @@ func main() {
 	// Define CLI flags
 	configDir := flag.String("config", "config", "Path to configuration directory")
 	reportID := flag.String("report-id", "", "Custom report ID (default: auto-generated)")
-	weekly := flag.Bool("weekly", false, "Use week-based report ID format")
 	logLevel := flag.String("log-level", "info", "Log level (debug, info, warn, error)")
 	showVersion := flag.Bool("version", false, "Show version information")
 	showHelp := flag.Bool("help", false, "Show help information")
@@ -72,11 +72,7 @@ func main() {
 	// Generate report ID if needed
 	finalReportID := *reportID
 	if finalReportID == "" {
-		if *weekly {
-			finalReportID = generateWeeklyReportID()
-		} else {
-			finalReportID = generateDailyReportID()
-		}
+		finalReportID = radar.ReportID(time.Now())
 	}
 
 	logger.Info().Str("report_id", finalReportID).Msg("using report ID")
@@ -117,8 +113,6 @@ func printHelp() {
 	fmt.Println("        Path to configuration directory (default: config)")
 	fmt.Println("  -report-id string")
 	fmt.Println("        Custom report ID (default: auto-generated)")
-	fmt.Println("  -weekly")
-	fmt.Println("        Use week-based report ID format")
 	fmt.Println("  -log-level string")
 	fmt.Println("        Log level: debug, info, warn, error (default: info)")
 	fmt.Println("  -version")
@@ -130,21 +124,7 @@ func printHelp() {
 	fmt.Println("  LLM_API_KEY     LLM API key (optional, uses template if not set)")
 	fmt.Println("\nExamples:")
 	fmt.Println("  github-insights")
-	fmt.Println("  github-insights -weekly")
 	fmt.Println("  github-insights -config ./custom-config")
-	fmt.Println("  github-insights -report-id 2024-02-week6")
+	fmt.Println("  github-insights -report-id 2026-W47")
 	fmt.Println("  github-insights -log-level debug")
-}
-
-// generateDailyReportID generates a daily report ID (YYYY-MM-DD)
-func generateDailyReportID() string {
-	now := time.Now()
-	return now.Format("2006-01-02")
-}
-
-// generateWeeklyReportID generates a weekly report ID (YYYY-MM-weekN)
-func generateWeeklyReportID() string {
-	now := time.Now()
-	year, week := now.ISOWeek()
-	return fmt.Sprintf("%d-%02d-week%d", year, int(now.Month()), week)
 }
