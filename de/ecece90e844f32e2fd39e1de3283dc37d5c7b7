@@ -1,0 +1,28 @@
+.github/workflows/weekly-report.yml
+  s_42173c093319fa::t_6c8fcb7ec8e021 36,58-59,70,77,103
+  s_42173c093319fa::t_a4d61bd750e3e4 61,75,79,81-95
+internal/pipeline/orchestrator.go
+  s_42173c093319fa::t_c5d578806d1e02 1,5,12,15,18-21,23-26,28-29,31-34,36-41,43,45,47-49,51-52,54,56-57,59-65,67,69,72-74,77-79,82-84,86,88-91,94-95
+internal/pipeline/orchestrator_test.go
+  s_42173c093319fa::t_4ed9e48a7d8cc3 1,4-10,13-14,16-17,19,22,24,26-31,33,35-38,41-45,47-49,51,54-59,62-67,69-75,77-94,98-100,102-106,108-109,111-122,125-127,130-142,146-157
+internal/models/models.go
+  s_42173c093319fa::t_5ecb0deb67ee0b 43-47
+README.md
+  s_42173c093319fa::t_07f76da4f1ece0 7,19,23-25,31,35-65,67,78-79,83-87,89,102-103,122,131-132,134,136-146
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.4.52-trip",
+  "base_commit_sha": "deecece90e844f32e2fd39e1de3283dc37d5c7b7",
+  "prompts": {},
+  "sessions": {
+    "s_42173c093319fa": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "04082371-feae-4a15-869f-46f83c62aabf",
+        "model": "claude-opus-5-5"
+      },
+      "human_author": "NoSugarCoffee <25247325+NoSugarCoffee@users.noreply.github.com>"
+    }
+  }
+}
