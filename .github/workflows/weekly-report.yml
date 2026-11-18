@@ -13,6 +13,14 @@ on:
         required: false
         default: false
         type: boolean
+      rss_week:
+        description: 'RSS Shanghai week to generate (scheduled runs always use previous)'
+        required: false
+        default: 'previous'
+        type: choice
+        options:
+          - previous
+          - current
       log_level:
         description: 'Log level'
         required: false
@@ -61,14 +69,21 @@ jobs:
       - name: Install dependencies
         run: go mod download
       
-      - name: Build application
-        run: go build -o ai-repo-insights ./cmd/ai-repo-insights/
+      - name: Build applications
+        run: |
+          go build -o ai-repo-insights ./cmd/ai-repo-insights/
+          go build -o rss-weekly ./cmd/rss-weekly/
       
-      - name: Generate report
+      - name: Generate radar report
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
         run: ./ai-repo-insights -log-level "${{ github.event.inputs.log_level || 'info' }}"
+
+      - name: Generate RSS weekly digest
+        env:
+          LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
+        run: ./rss-weekly -week "${{ github.event.inputs.rss_week || 'previous' }}" -log-level "${{ github.event.inputs.log_level || 'info' }}"
 
       - name: Commit and push report
         id: publish
@@ -80,7 +95,7 @@ jobs:
           REPORT_DATE=$(date +%Y-%m-%d)
           
           # Add generated files
-          git add data/weekly/ data/history.json
+          git add data/weekly/ data/rss-weekly/ data/history.json
           
           # Check if there are changes to commit
           if git diff --staged --quiet; then
@@ -100,6 +115,7 @@ jobs:
           name: weekly-report
           path: |
             data/weekly/*.json
+            data/rss-weekly/*.json
           retention-days: 90
 
   trigger_site_deploy:

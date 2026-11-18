@@ -2,7 +2,7 @@
 
 <img src="logo.png" alt="ai-repo-insights" width="512"/>
 
-[![Go Version](https://img.shields.io/badge/go-1.24%2B-00ADD8?logo=go)](https://go.dev/)
+[![Go Version](https://img.shields.io/badge/go-1.25%2B-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-2.0.0-green.svg)](cmd/ai-repo-insights/main.go)
 
@@ -28,7 +28,9 @@ export LLM_API_KEY=your-google-ai-key  # Gemini key for the default config
 ./ai-repo-insights
 ```
 
-Each run writes one issue of the **AI 开源雷达** to `data/weekly/<YYYY-Www>.json` (ISO week, e.g. `2026-W47`) and records every repository it saw in `data/history.json`. The site [NoSugarCoffee.github.io](https://nosugarcoffee.github.io/radar) renders the issues at `/radar`.
+Each radar run writes one issue of the **AI 开源雷达** to `data/weekly/<YYYY-Www>.json` (ISO week, e.g. `2026-W47`) and records every repository it saw in `data/history.json`. The site [NoSugarCoffee.github.io](https://nosugarcoffee.github.io/radar) renders the issues at `/radar`.
+
+A sibling command writes **RSS 周报** to `data/rss-weekly/<YYYY-Www>.json` from the live OPML at [NoSugarCoffee/rss-feeds](https://github.com/NoSugarCoffee/rss-feeds). The site renders it under `/radar/rss`.
 
 ---
 
@@ -82,7 +84,21 @@ Each run writes one issue of the **AI 开源雷达** to `data/weekly/<YYYY-Www>.
 
 ### Scheduled run
 
-`.github/workflows/weekly-report.yml` runs every Monday 00:00 UTC (and on manual dispatch). It commits the new issue and history, then sends a `radar-updated` repository dispatch to the site so it redeploys. `DEPLOY_TOKEN` should be a fine-grained personal access token restricted to `NoSugarCoffee/NoSugarCoffee.github.io`, with repository **Contents: Read and write** permission. If publication succeeds but dispatch fails, manually run the workflow with `dispatch_only` enabled; this retries the dispatch without regenerating the non-overwritable weekly issue.
+`.github/workflows/weekly-report.yml` runs every Monday 00:00 UTC (and on manual dispatch). In one job it generates the radar issue and the RSS 周报, commits both data directories plus history when they change, then sends a `radar-updated` repository dispatch to the site so it redeploys. Keep listening for `radar-updated`; there is no separate RSS event.
+
+The RSS scheduled run uses the just-completed Asia/Shanghai week (Monday 00:00 through Sunday 24:00). That week id can differ from the radar issue id written in the same workflow run; they are independent. Manual sample generation can use `-week current` for the in-progress Shanghai week. `DEPLOY_TOKEN` should be a fine-grained personal access token restricted to `NoSugarCoffee/NoSugarCoffee.github.io`, with repository **Contents: Read and write** permission. If publication succeeds but dispatch fails, manually run the workflow with `dispatch_only` enabled; this retries the dispatch without regenerating the non-overwritable weekly files.
+
+### RSS 周报
+
+```bash
+go build -o rss-weekly ./cmd/rss-weekly
+export LLM_API_KEY=...   # required when the selected week has articles
+./rss-weekly                 # previous completed Shanghai week (default)
+./rss-weekly -week current   # current partial Shanghai week
+./rss-weekly -week current -stub-summaries  # offline sample without LLM_API_KEY
+```
+
+Each file follows schema `rss-weekly/1` with snake_case fields (`summary_zh`, `published_at`, …), date-only `week_start`/`week_end`, ISO timestamps for `generated_at`/`published_at`, OPML category groups in source order, and `failed_feeds` for subscriptions that could not be fetched. An empty week still writes a valid file with empty groups.
 
 ### Backfilling history
 
@@ -129,6 +145,7 @@ Each example directory contains every required configuration file. See [examples
 ai-repo-insights/
 ├── cmd/
 │   ├── ai-repo-insights/     # Weekly radar run
+│   ├── rss-weekly/           # Weekly RSS digest
 │   └── backfill-history/     # One-off history backfill from old reports
 ├── internal/
 │   ├── config/               # Configuration and writing guide loading
@@ -137,11 +154,14 @@ ai-repo-insights/
 │   ├── githubapi/            # GitHub REST client (created_at, README)
 │   ├── history/              # First-seen tracking
 │   ├── radar/                # Selection, issue model, JSON output
+│   ├── rssweekly/            # OPML/feed collection and RSS digest schema
+│   ├── rsspipeline/          # RSS digest run order
 │   ├── llm/                  # LLM client (OpenAI-compatible / Gemini) and copy rules
-│   └── pipeline/             # Run order
+│   └── pipeline/             # Radar run order
 ├── config/                   # Default configuration and writing guide
 ├── data/
-│   ├── weekly/               # One JSON file per issue
+│   ├── weekly/               # One radar JSON file per issue
+│   ├── rss-weekly/           # One RSS digest JSON file per week
 │   └── history.json          # Every repository ever shown
 └── reports/                  # Markdown reports up to 2026-W47 (no longer generated)
 ```
@@ -152,14 +172,14 @@ ai-repo-insights/
 go build -o ai-repo-insights ./cmd/ai-repo-insights
 ```
 
-Requires Go 1.24+.
+Requires Go 1.25+.
 
 ## 📦 Dependencies
 
 | Package | Purpose |
 |---------|---------|
 | [github.com/PuerkitoBio/goquery](https://github.com/PuerkitoBio/goquery) | HTML parsing for web scraping |
-| [github.com/andygrunwald/go-trending](https://github.com/andygrunwald/go-trending) | GitHub trending page client |
+| [github.com/mmcdole/gofeed](https://github.com/mmcdole/gofeed) | RSS and Atom feed parsing |
 | [github.com/rs/zerolog](https://github.com/rs/zerolog) | Structured logging |
 
 ## 📄 License
