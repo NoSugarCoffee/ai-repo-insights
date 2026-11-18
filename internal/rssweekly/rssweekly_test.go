@@ -320,6 +320,53 @@ func TestWriteDigestWritesContractAndRefusesReplacement(t *testing.T) {
 	}
 }
 
+func TestWriteDigestReplacesStubSample(t *testing.T) {
+	shanghai := time.FixedZone("Asia/Shanghai", 8*60*60)
+	dir := t.TempDir()
+	stub := Digest{
+		Schema:      SchemaVersion,
+		ID:          "2026-W47",
+		WeekStart:   "2026-11-16",
+		WeekEnd:     "2026-11-22",
+		GeneratedAt: time.Date(2026, 11, 18, 12, 0, 0, 0, shanghai),
+		OPML:        "https://raw.githubusercontent.com/NoSugarCoffee/rss-feeds/main/feeds.opml",
+		Groups:      []Group{{Category: "Blogs", Items: []Article{}}},
+		FailedFeeds: []FailedFeed{},
+		SummaryMode: "stub",
+	}
+	if _, err := WriteDigest(dir, stub); err != nil {
+		t.Fatalf("write stub: %v", err)
+	}
+
+	final := stub
+	final.SummaryMode = ""
+	final.Groups = []Group{{
+		Category: "Blogs",
+		Items: []Article{{
+			Title:       "Real",
+			URL:         "https://example.com/real",
+			Source:      "Example",
+			PublishedAt: time.Date(2026, 11, 17, 9, 0, 0, 0, shanghai),
+			Summary:     "正式中文摘要",
+		}},
+	}}
+	path, err := WriteDigest(dir, final)
+	if err != nil {
+		t.Fatalf("WriteDigest() should replace stub: %v", err)
+	}
+	data, err := os.ReadFile(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	raw := string(data)
+	if strings.Contains(raw, `"summary_mode"`) {
+		t.Fatalf("stub marker should be gone after replacement:\n%s", raw)
+	}
+	if !strings.Contains(raw, `"summary_zh": "正式中文摘要"`) {
+		t.Fatalf("replacement content missing:\n%s", raw)
+	}
+}
+
 func mapKeys(values map[string]json.RawMessage) []string {
 	keys := make([]string, 0, len(values))
 	for key := range values {

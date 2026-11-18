@@ -321,11 +321,33 @@ func WriteDigest(dir string, digest Digest) (string, error) {
 		return "", fmt.Errorf("close digest %s: %w", path, err)
 	}
 	if err := os.Link(tempPath, path); errors.Is(err, fs.ErrExist) {
-		return "", fmt.Errorf("digest %s already exists", path)
+		if !isStubDigest(path) {
+			return "", fmt.Errorf("digest %s already exists", path)
+		}
+		// Committed stub samples (summary_mode=stub) may be replaced by the
+		// completed Monday run for the same ISO week.
+		if err := os.Remove(path); err != nil {
+			return "", fmt.Errorf("remove stub digest %s: %w", path, err)
+		}
+		if err := os.Link(tempPath, path); err != nil {
+			return "", fmt.Errorf("publish digest %s over stub: %w", path, err)
+		}
 	} else if err != nil {
 		return "", fmt.Errorf("publish digest %s: %w", path, err)
 	}
 	return path, nil
+}
+
+func isStubDigest(path string) bool {
+	data, err := os.ReadFile(path)
+	if err != nil {
+		return false
+	}
+	var existing Digest
+	if err := json.Unmarshal(data, &existing); err != nil {
+		return false
+	}
+	return existing.SummaryMode == "stub"
 }
 
 func boundedError(err error) string {
