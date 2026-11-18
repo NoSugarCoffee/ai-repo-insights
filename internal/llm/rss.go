@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"strings"
 	"time"
+	"unicode"
 	"unicode/utf8"
 
 	apperrors "ai-repo-insights/internal/errors"
@@ -27,7 +28,7 @@ func (e *RSSSummaryRuleError) Error() string {
 	return fmt.Sprintf("LLM RSS summary breaks rule %s: %s", e.Rule, e.Detail)
 }
 
-// ValidateRSSSummaries checks that every URL has a non-empty single-line summary.
+// ValidateRSSSummaries checks that every URL has a non-empty single-line Chinese sentence.
 func ValidateRSSSummaries(summaries map[string]string, urls []string) error {
 	for _, url := range urls {
 		summary, ok := summaries[url]
@@ -37,11 +38,38 @@ func ValidateRSSSummaries(summaries map[string]string, urls []string) error {
 		if strings.TrimSpace(summary) == "" {
 			return &RSSSummaryRuleError{Rule: "blank-summary", Detail: "blank summary for " + url}
 		}
-		if strings.ContainsAny(summary, "\n\r") {
+		if strings.ContainsAny(summary, "
+") {
 			return &RSSSummaryRuleError{Rule: "multiline-summary", Detail: "multiline summary for " + url}
+		}
+		if !containsHan(summary) {
+			return &RSSSummaryRuleError{Rule: "non-chinese-summary", Detail: "summary for " + url + " has no Chinese characters"}
+		}
+		if sentenceTerminators(summary) > 1 {
+			return &RSSSummaryRuleError{Rule: "multi-sentence-summary", Detail: "summary for " + url + " has more than one sentence"}
 		}
 	}
 	return nil
+}
+
+func containsHan(s string) bool {
+	for _, r := range s {
+		if unicode.Is(unicode.Han, r) {
+			return true
+		}
+	}
+	return false
+}
+
+func sentenceTerminators(s string) int {
+	n := 0
+	for _, r := range s {
+		switch r {
+		case '。', '！', '？', '!', '?':
+			n++
+		}
+	}
+	return n
 }
 
 // WriteRSSSummaries asks the LLM for one Chinese sentence per article URL.
