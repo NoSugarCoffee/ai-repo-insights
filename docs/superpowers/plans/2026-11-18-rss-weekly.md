@@ -6,7 +6,7 @@
 
 **Architecture:** A focused `rssweekly` package owns input parsing, time windows, collection, schema, and output. A small orchestration package injects network and LLM boundaries, while a sibling CLI wires the existing configuration and credentials. The existing workflow runs radar and RSS in one publication job and emits the existing dispatch.
 
-**Tech Stack:** Go 1.24, standard `encoding/xml`/`net/http`, `github.com/mmcdole/gofeed`, existing OpenAI/Gemini-compatible LLM client, GitHub Actions.
+**Tech Stack:** Go 1.25, standard `encoding/xml`/`net/http`, `github.com/mmcdole/gofeed`, existing OpenAI/Gemini-compatible LLM client, GitHub Actions.
 
 ## Global Constraints
 
@@ -89,7 +89,7 @@ Expected: PASS.
 - Create: `internal/llm/rss_test.go`
 
 **Interfaces:**
-- Produces: `WriteRSSSummaries([]rssweekly.Article) (map[string]string, error)`.
+- Produces: `(*llm.Client).WriteRSSSummaries([]rssweekly.Article) (map[string]string, error)`.
 
 - [ ] **Step 1: Write failing tests**
 
@@ -117,7 +117,7 @@ Expected: PASS.
 - Create: `cmd/rss-weekly/main.go`
 
 **Interfaces:**
-- Produces: `rsspipeline.Run(context.Context, Deps) (string, error)` and CLI flags `-config`, `-out`, `-opml`, `-week`, `-log-level`.
+- Produces: `rsspipeline.Run(context.Context, Deps, zerolog.Logger) (string, error)` and CLI flags `-config`, `-out`, `-opml`, `-week`, `-stub-summaries`, `-log-level`.
 
 - [ ] **Step 1: Write failing pipeline tests**
 
@@ -157,7 +157,7 @@ Document the path contract, Monday previous-week behavior, manual current mode, 
 
 - [ ] **Step 3: Generate current partial-week sample**
 
-Run `go run ./cmd/rss-weekly -week current` when `LLM_API_KEY` is available. Otherwise fetch live data through the same pipeline with a deterministic stub summarizer and include optional `"summary_mode": "stub"` in the sample only.
+Run `go run ./cmd/rss-weekly -week current` when `LLM_API_KEY` is available. Otherwise run `go run ./cmd/rss-weekly -week current -stub-summaries`, which uses the same pipeline with a deterministic stub summarizer and sets optional `"summary_mode": "stub"` on the sample only.
 
 - [ ] **Step 4: Verify all outputs**
 

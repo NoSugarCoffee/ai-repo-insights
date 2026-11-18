@@ -23,7 +23,7 @@ const (
 // Deps are injected boundaries for OPML, feed collection, summarization, and output.
 type Deps struct {
 	OPML        func(ctx context.Context) ([]rssweekly.Feed, []string, error)
-	Collect     func(ctx context.Context, feeds []rssweekly.Feed, week rssweekly.Week) ([]rssweekly.Article, []rssweekly.FailedFeed)
+	Collect     func(ctx context.Context, feeds []rssweekly.Feed, week rssweekly.Week, now time.Time) ([]rssweekly.Article, []rssweekly.FailedFeed)
 	Summarize   func(articles []rssweekly.Article) (map[string]string, error)
 	OutDir      string
 	Now         time.Time
@@ -45,7 +45,7 @@ func Run(ctx context.Context, deps Deps, logger zerolog.Logger) (string, error) 
 		return "", fmt.Errorf("load OPML: %w", err)
 	}
 
-	articles, failures := deps.Collect(ctx, feeds, week)
+	articles, failures := deps.Collect(ctx, feeds, week, deps.Now)
 	logger.Info().
 		Int("feeds", len(feeds)).
 		Int("articles", len(articles)).
@@ -110,6 +110,6 @@ func ParseOPMLFromURL(ctx context.Context, url string) ([]rssweekly.Feed, []stri
 }
 
 // CollectFeeds uses production HTTP settings via rssweekly.Collect.
-func CollectFeeds(ctx context.Context, feeds []rssweekly.Feed, week rssweekly.Week) ([]rssweekly.Article, []rssweekly.FailedFeed) {
-	return rssweekly.Collect(ctx, feeds, week, nil)
+func CollectFeeds(ctx context.Context, feeds []rssweekly.Feed, week rssweekly.Week, now time.Time) ([]rssweekly.Article, []rssweekly.FailedFeed) {
+	return rssweekly.Collect(ctx, feeds, week, now, nil)
 }

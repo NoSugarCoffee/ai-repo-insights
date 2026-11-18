@@ -165,6 +165,7 @@ func TestCollectFiltersDeduplicatesAndContinuesAfterFeedFailure(t *testing.T) {
   <item><title>No date</title><link>https://example.com/no-date</link></item>
   <item><title>No URL</title><pubDate>Tue, 10 Nov 2026 02:00:00 GMT</pubDate></item>
   <item><title>First duplicate</title><link> https://example.com/shared </link><pubDate>Wed, 11 Nov 2026 03:00:00 GMT</pubDate></item>
+  <item><title>Future dated</title><link>https://example.com/future</link><pubDate>Sun, 15 Nov 2026 13:00:00 GMT</pubDate></item>
 </channel></rss>`))
 	})
 	mux.HandleFunc("/security.atom", func(w http.ResponseWriter, _ *http.Request) {
@@ -194,7 +195,8 @@ func TestCollectFiltersDeduplicatesAndContinuesAfterFeedFailure(t *testing.T) {
 		{Category: "Operations", Source: "Broken Feed", XMLURL: server.URL + "/broken.xml"},
 	}
 
-	articles, failures := Collect(context.Background(), feeds, week, nil)
+	now := time.Date(2026, time.November, 15, 20, 0, 0, 0, shanghai)
+	articles, failures := Collect(context.Background(), feeds, week, now, nil)
 
 	if len(failures) != 1 {
 		t.Fatalf("Collect() failures = %#v, want one", failures)
@@ -219,6 +221,14 @@ func TestCollectFiltersDeduplicatesAndContinuesAfterFeedFailure(t *testing.T) {
 	}
 	if articles[3].PublishedAt.Hour() != 18 || articles[3].Description != "updated summary" {
 		t.Errorf("Collect() updated fallback article = %#v, want Shanghai updated time and summary", articles[3])
+	}
+	for _, article := range articles {
+		if article.Title == "Future dated" || article.URL == "https://example.com/future" {
+			t.Fatalf("Collect() included future-dated article %#v", article)
+		}
+		if article.PublishedAt.After(now) {
+			t.Fatalf("Collect() included article after now: %#v", article)
+		}
 	}
 }
 
@@ -436,5 +446,12 @@ func TestDigestJSONUsesContractFieldNames(t *testing.T) {
 	}
 	if strings.Contains(raw, `"summary":`) || strings.Contains(raw, `"xml_url":`) {
 		t.Errorf("digest JSON used unexpected field names: %s", raw)
+	}
+}
+
+func TestParseOPMLRejectsNonOPMLRoot(t *testing.T) {
+	_, _, err := ParseOPML(strings.NewReader(`<html><body><outline text="x" xmlUrl="https://example.com/x.xml"/></body></html>`))
+	if err == nil {
+		t.Fatal("ParseOPML() error = nil, want non-OPML root rejection")
 	}
 }

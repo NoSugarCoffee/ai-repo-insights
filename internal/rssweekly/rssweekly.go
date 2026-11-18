@@ -90,7 +90,8 @@ type FeedParser interface {
 }
 
 type opmlDocument struct {
-	Body opmlBody `xml:"body"`
+	XMLName xml.Name `xml:"opml"`
+	Body    opmlBody `xml:"body"`
 }
 
 type opmlBody struct {
@@ -109,6 +110,9 @@ func ParseOPML(r io.Reader) ([]Feed, []string, error) {
 	var document opmlDocument
 	if err := xml.NewDecoder(r).Decode(&document); err != nil {
 		return nil, nil, fmt.Errorf("parse OPML: %w", err)
+	}
+	if document.XMLName.Local != "opml" {
+		return nil, nil, fmt.Errorf("parse OPML: root element must be opml")
 	}
 
 	var feeds []Feed
@@ -180,9 +184,10 @@ func WeekFor(now time.Time, mode WeekMode) (Week, error) {
 	}, nil
 }
 
-// Collect fetches feeds in order and retains items in the selected week.
-// A nil parser uses a gofeed parser with the production HTTP settings.
-func Collect(ctx context.Context, feeds []Feed, week Week, parser FeedParser) ([]Article, []FailedFeed) {
+// Collect fetches feeds in order and retains items in the selected week that
+// were published at or before now. A nil parser uses a gofeed parser with the
+// production HTTP settings.
+func Collect(ctx context.Context, feeds []Feed, week Week, now time.Time, parser FeedParser) ([]Article, []FailedFeed) {
 	if parser == nil {
 		defaultParser := gofeed.NewParser()
 		defaultParser.Client = &http.Client{Timeout: feedRequestTimeout}
@@ -214,7 +219,7 @@ func Collect(ctx context.Context, feeds []Feed, week Week, parser FeedParser) ([
 			if publishedAt == nil {
 				publishedAt = item.UpdatedParsed
 			}
-			if url == "" || publishedAt == nil || publishedAt.Before(week.Start) || !publishedAt.Before(week.End) {
+			if url == "" || publishedAt == nil || publishedAt.Before(week.Start) || !publishedAt.Before(week.End) || publishedAt.After(now) {
 				continue
 			}
 			if _, exists := seenURLs[url]; exists {

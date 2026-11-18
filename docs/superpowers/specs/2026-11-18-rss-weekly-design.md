@@ -15,7 +15,7 @@ The RSS command also accepts a current-week mode for manual partial-week generat
 - `internal/rssweekly`: schema types, OPML parsing, Shanghai week calculations, feed collection, deduplication, ordering, and atomic JSON output.
 - `internal/llm`: a batch RSS summarization method on the existing client, using the configured provider, credentials, retries, and timeout.
 - `internal/rsspipeline`: orchestration with injected OPML/feed/summarizer dependencies for deterministic tests.
-- `cmd/rss-weekly`: production wiring and flags. It loads the existing LLM configuration and requires `LLM_API_KEY` only when articles need summaries.
+- `cmd/rss-weekly`: production wiring and flags. It loads the existing LLM configuration and requires `LLM_API_KEY` only when articles need summaries, unless `-stub-summaries` is set for offline sample generation.
 
 Feed parsing uses `github.com/mmcdole/gofeed` for RSS and Atom compatibility. HTTP requests use a 30-second timeout and an identifying User-Agent.
 
@@ -25,7 +25,7 @@ Feed parsing uses `github.com/mmcdole/gofeed` for RSS and Atom compatibility. HT
 2. Parse feed `xmlUrl`, source name, and nearest parent category in document order.
 3. Create all category groups in OPML order, including categories with no matching articles.
 4. Fetch every feed independently. Record failures in `failed_feeds` and continue.
-5. Use `published` time, falling back to `updated` time, and retain entries inside the selected half-open week window.
+5. Use `published` time, falling back to `updated` time, and retain entries inside the selected half-open week window that are also at or before run time (so current-week mode excludes future-dated items).
 6. Ignore entries without a usable URL or publication time. Deduplicate URLs globally; the first feed in OPML order owns a duplicate.
 7. Summarize retained items in bounded batches through the existing LLM client.
 8. Sort items by `published_at` descending within each group.

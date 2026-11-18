@@ -95,6 +95,7 @@ go build -o rss-weekly ./cmd/rss-weekly
 export LLM_API_KEY=...   # required when the selected week has articles
 ./rss-weekly                 # previous completed Shanghai week (default)
 ./rss-weekly -week current   # current partial Shanghai week
+./rss-weekly -week current -stub-summaries  # offline sample without LLM_API_KEY
 ```
 
 Each file follows schema `rss-weekly/1` with snake_case fields (`summary_zh`, `published_at`, …), date-only `week_start`/`week_end`, ISO timestamps for `generated_at`/`published_at`, OPML category groups in source order, and `failed_feeds` for subscriptions that could not be fetched. An empty week still writes a valid file with empty groups.

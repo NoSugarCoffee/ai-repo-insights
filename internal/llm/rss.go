@@ -82,7 +82,7 @@ func (c *Client) writeRSSSummariesBatch(batch []rssweekly.Article) (map[string]s
 		attemptPrompt := prompt
 		var ruleErr *RSSSummaryRuleError
 		if errors.As(lastErr, &ruleErr) {
-			attemptPrompt += fmt.Sprintf("\n\n上一次的输出不合格（%s：%s）。请修正后重新输出完整 JSON。", ruleErr.Rule, ruleErr.Detail)
+			attemptPrompt += fmt.Sprintf("\n\n上一次的输出不合格（%s）。请修正后重新输出完整 JSON。", ruleErr.Rule)
 		}
 		summaries, err := c.attemptRSSSummaries(attemptPrompt, urls)
 		if err == nil {

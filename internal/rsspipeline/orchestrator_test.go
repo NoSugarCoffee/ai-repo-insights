@@ -25,7 +25,7 @@ func TestRunEmptyWeekSkipsSummariesAndWritesFile(t *testing.T) {
 				{Category: "Engineering", Source: "Go Blog", XMLURL: "https://example.com/go.xml"},
 			}, []string{"Engineering", "Empty"}, nil
 		},
-		Collect: func(context.Context, []rssweekly.Feed, rssweekly.Week) ([]rssweekly.Article, []rssweekly.FailedFeed) {
+		Collect: func(context.Context, []rssweekly.Feed, rssweekly.Week, time.Time) ([]rssweekly.Article, []rssweekly.FailedFeed) {
 			return nil, nil
 		},
 		Summarize: summarizer.Summarize,
@@ -79,7 +79,7 @@ func TestRunRetainsFailedFeedsAndContinues(t *testing.T) {
 				{Category: "Ops", Source: "Broken", XMLURL: "https://example.com/broken.xml"},
 			}, []string{"Engineering", "Ops"}, nil
 		},
-		Collect: func(context.Context, []rssweekly.Feed, rssweekly.Week) ([]rssweekly.Article, []rssweekly.FailedFeed) {
+		Collect: func(context.Context, []rssweekly.Feed, rssweekly.Week, time.Time) ([]rssweekly.Article, []rssweekly.FailedFeed) {
 			return []rssweekly.Article{
 					{
 						Title:       "Fresh",
@@ -141,7 +141,7 @@ func TestRunAppliesSummariesBeforeWrite(t *testing.T) {
 				{Category: "Engineering", Source: "Feed", XMLURL: "https://example.com/feed.xml"},
 			}, []string{"Engineering"}, nil
 		},
-		Collect: func(context.Context, []rssweekly.Feed, rssweekly.Week) ([]rssweekly.Article, []rssweekly.FailedFeed) {
+		Collect: func(context.Context, []rssweekly.Feed, rssweekly.Week, time.Time) ([]rssweekly.Article, []rssweekly.FailedFeed) {
 			return []rssweekly.Article{
 				{
 					Title:       "One",
