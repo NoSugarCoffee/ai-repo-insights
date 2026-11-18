@@ -2,7 +2,7 @@
 
 <img src="logo.png" alt="ai-repo-insights" width="512"/>
 
-[![Go Version](https://img.shields.io/badge/go-1.24%2B-00ADD8?logo=go)](https://go.dev/)
+[![Go Version](https://img.shields.io/badge/go-1.25%2B-00ADD8?logo=go)](https://go.dev/)
 [![License](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 [![Version](https://img.shields.io/badge/version-2.0.0-green.svg)](cmd/ai-repo-insights/main.go)
 
@@ -152,7 +152,7 @@ ai-repo-insights/
 go build -o ai-repo-insights ./cmd/ai-repo-insights
 ```
 
-Requires Go 1.24+.
+Requires Go 1.25+.
 
 ## 📦 Dependencies
 
