@@ -161,7 +161,7 @@ Run `go run ./cmd/rss-weekly -week current` when `LLM_API_KEY` is available. Oth
 
 - [ ] **Step 4: Verify all outputs**
 
-Run: `gofmt -w cmd/rss-weekly internal/rssweekly internal/rsspipeline internal/llm/rss.go internal/llm/rss_test.go && go test ./... && go vet ./... && go build ./... && git diff --check`
+Run: `gofmt -w cmd/rss-weekly/main.go internal/rssweekly/rssweekly.go internal/rssweekly/rssweekly_test.go internal/rsspipeline/orchestrator.go internal/rsspipeline/orchestrator_test.go internal/llm/rss.go internal/llm/rss_test.go && go test ./... && go vet ./... && go build ./... && git diff --check`
 Expected: all commands exit 0.
 
 - [ ] **Step 5: Commit**

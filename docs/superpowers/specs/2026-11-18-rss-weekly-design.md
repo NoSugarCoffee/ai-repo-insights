@@ -29,7 +29,7 @@ Feed parsing uses `github.com/mmcdole/gofeed` for RSS and Atom compatibility. HT
 6. Ignore entries without a usable URL or publication time. Deduplicate URLs globally; the first feed in OPML order owns a duplicate.
 7. Summarize retained items in bounded batches through the existing LLM client.
 8. Sort items by `published_at` descending within each group.
-9. Atomically create `data/rss-weekly/<YYYY-Www>.json` without replacing an existing file.
+9. Atomically create `data/rss-weekly/<YYYY-Www>.json` without replacing an existing real digest; a committed `summary_mode: "stub"` sample may be replaced by a completed run.
 
 Generated timestamps and normalized article timestamps use Asia/Shanghai offsets. The required schema keys remain exactly as specified. Optional `summary_mode` is present only on a committed sample produced without live LLM credentials.
 

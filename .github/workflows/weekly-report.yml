@@ -13,6 +13,14 @@ on:
         required: false
         default: false
         type: boolean
+      rss_week:
+        description: 'RSS Shanghai week to generate (scheduled runs always use previous)'
+        required: false
+        default: 'previous'
+        type: choice
+        options:
+          - previous
+          - current
       log_level:
         description: 'Log level'
         required: false
@@ -75,7 +83,7 @@ jobs:
       - name: Generate RSS weekly digest
         env:
           LLM_API_KEY: ${{ secrets.LLM_API_KEY }}
-        run: ./rss-weekly -week previous -log-level "${{ github.event.inputs.log_level || 'info' }}"
+        run: ./rss-weekly -week "${{ github.event.inputs.rss_week || 'previous' }}" -log-level "${{ github.event.inputs.log_level || 'info' }}"
 
       - name: Commit and push report
         id: publish
