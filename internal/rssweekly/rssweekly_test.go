@@ -49,10 +49,13 @@ func TestParseOPML(t *testing.T) {
 			wantCategories: []string{"Data"},
 		},
 		{
-			name: "repeated category names preserve each outline occurrence",
+			name: "repeated category names form one group in first occurrence order",
 			opml: `<opml version="2.0"><body>
   <outline text="Engineering">
     <outline text="Go Blog" xmlUrl="https://go.dev/blog/feed.atom"/>
+  </outline>
+  <outline text="Security">
+    <outline text="Krebs" xmlUrl="https://krebsonsecurity.com/feed/"/>
   </outline>
   <outline text="Engineering">
     <outline text="Rust Blog" xmlUrl="https://blog.rust-lang.org/feed.xml"/>
@@ -60,9 +63,10 @@ func TestParseOPML(t *testing.T) {
 </body></opml>`,
 			wantFeeds: []Feed{
 				{Category: "Engineering", Source: "Go Blog", XMLURL: "https://go.dev/blog/feed.atom"},
+				{Category: "Security", Source: "Krebs", XMLURL: "https://krebsonsecurity.com/feed/"},
 				{Category: "Engineering", Source: "Rust Blog", XMLURL: "https://blog.rust-lang.org/feed.xml"},
 			},
-			wantCategories: []string{"Engineering", "Engineering"},
+			wantCategories: []string{"Engineering", "Security"},
 		},
 		{
 			name: "unnamed wrappers retain nearest named category",
