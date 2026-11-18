@@ -38,6 +38,10 @@ func TestValidateRSSSummaries(t *testing.T) {
 		{"missing url", map[string]string{"https://a/1": "第一篇的摘要。"}, "missing-summary"},
 		{"blank summary", map[string]string{"https://a/1": "第一篇的摘要。", "https://a/2": "   "}, "blank-summary"},
 		{"multiline", map[string]string{"https://a/1": "第一篇的摘要。", "https://a/2": "两行\n摘要"}, "multiline-summary"},
+		{"english only", map[string]string{"https://a/1": "第一篇的摘要。", "https://a/2": "English only summary."}, "non-chinese-summary"},
+		{"multi sentence", map[string]string{"https://a/1": "第一篇的摘要。", "https://a/2": "第一句。第二句。"}, "multi-sentence-summary"},
+		{"english only", map[string]string{"https://a/1": "第一篇的摘要。", "https://a/2": "English only summary."}, "non-chinese-summary"},
+		{"multi sentence", map[string]string{"https://a/1": "第一篇的摘要。", "https://a/2": "第一句。第二句。"}, "multi-sentence-summary"},
 	}
 	for _, tc := range cases {
 		t.Run(tc.name, func(t *testing.T) {
