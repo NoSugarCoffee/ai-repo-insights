@@ -38,8 +38,7 @@ func ValidateRSSSummaries(summaries map[string]string, urls []string) error {
 		if strings.TrimSpace(summary) == "" {
 			return &RSSSummaryRuleError{Rule: "blank-summary", Detail: "blank summary for " + url}
 		}
-		if strings.ContainsAny(summary, "
-") {
+		if strings.ContainsRune(summary, '\n') || strings.ContainsRune(summary, '\r') {
 			return &RSSSummaryRuleError{Rule: "multiline-summary", Detail: "multiline summary for " + url}
 		}
 		if !containsHan(summary) {
