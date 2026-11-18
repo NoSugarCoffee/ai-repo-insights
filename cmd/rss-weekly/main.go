@@ -105,7 +105,7 @@ func stubSummary(a rssweekly.Article) string {
 	if source == "" {
 		source = "未知来源"
 	}
-	return "【stub】" + source + "：" + title
+	return "【stub】文章《" + title + "》来自" + source + "，摘要待生成。"
 }
 
 func fail(format string, args ...any) {

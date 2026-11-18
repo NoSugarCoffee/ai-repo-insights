@@ -3,7 +3,7 @@
   "id": "2026-W47",
   "week_start": "2026-11-16",
   "week_end": "2026-11-22",
-  "generated_at": "2026-11-18T12:45:52.56272898+08:00",
+  "generated_at": "2026-11-18T13:03:12.971027858+08:00",
   "opml": "https://raw.githubusercontent.com/NoSugarCoffee/rss-feeds/main/feeds.opml",
   "groups": [
     {
@@ -14,63 +14,63 @@
           "url": "https://flaviocopes.com/copilot-cli/",
           "source": "Flavio Copes",
           "published_at": "2026-11-18T02:36:00+08:00",
-          "summary_zh": "【stub】Flavio Copes：How to use GitHub Copilot CLI: a complete tutorial"
+          "summary_zh": "【stub】文章《How to use GitHub Copilot CLI: a complete tutorial》来自Flavio Copes，摘要待生成。"
         },
         {
           "title": "How to use GPT-6.2 Astra and Sol in Codex and the API",
           "url": "https://flaviocopes.com/gpt-6-2/",
           "source": "Flavio Copes",
           "published_at": "2026-11-18T02:30:00+08:00",
-          "summary_zh": "【stub】Flavio Copes：How to use GPT-6.2 Astra and Sol in Codex and the API"
+          "summary_zh": "【stub】文章《How to use GPT-6.2 Astra and Sol in Codex and the API》来自Flavio Copes，摘要待生成。"
         },
         {
           "title": "Deterministic Simulation Testing",
           "url": "https://martinfowler.com/articles/deterministic-simulation-testing.html",
           "source": "Martin Fowler",
           "published_at": "2026-11-17T22:33:00+08:00",
-          "summary_zh": "【stub】Martin Fowler：Deterministic Simulation Testing"
+          "summary_zh": "【stub】文章《Deterministic Simulation Testing》来自Martin Fowler，摘要待生成。"
         },
         {
           "title": "A deep dive into ChatGPT Sites",
           "url": "https://flaviocopes.com/chatgpt-sites/",
           "source": "Flavio Copes",
           "published_at": "2026-11-17T17:00:00+08:00",
-          "summary_zh": "【stub】Flavio Copes：A deep dive into ChatGPT Sites"
+          "summary_zh": "【stub】文章《A deep dive into ChatGPT Sites》来自Flavio Copes，摘要待生成。"
         },
         {
           "title": "How to use OpenCode Browse",
           "url": "https://flaviocopes.com/opencode-browse/",
           "source": "Flavio Copes",
           "published_at": "2026-11-17T16:45:00+08:00",
-          "summary_zh": "【stub】Flavio Copes：How to use OpenCode Browse"
+          "summary_zh": "【stub】文章《How to use OpenCode Browse》来自Flavio Copes，摘要待生成。"
         },
         {
           "title": "Why large monorepos need code search, especially with AI coding agents",
           "url": "https://sourcegraph.com/blog/monorepo-code-search-ai-coding-agents",
           "source": "Sourcegraph Blog",
           "published_at": "2026-11-17T08:00:00+08:00",
-          "summary_zh": "【stub】Sourcegraph Blog：Why large monorepos need code search, especially with …"
+          "summary_zh": "【stub】文章《Why large monorepos need code search, especially with AI coding agents》来自Sourcegraph Blog，摘要待生成。"
         },
         {
           "title": "A deep dive into ChatGPT Wallet",
           "url": "https://flaviocopes.com/chatgpt-wallet/",
           "source": "Flavio Copes",
           "published_at": "2026-11-17T01:10:00+08:00",
-          "summary_zh": "【stub】Flavio Copes：A deep dive into ChatGPT Wallet"
+          "summary_zh": "【stub】文章《A deep dive into ChatGPT Wallet》来自Flavio Copes，摘要待生成。"
         },
         {
           "title": "AI is eroding my coding skills, and I don't care",
           "url": "https://flaviocopes.com/ai-eroding-coding-skills/",
           "source": "Flavio Copes",
           "published_at": "2026-11-17T00:00:00+08:00",
-          "summary_zh": "【stub】Flavio Copes：AI is eroding my coding skills, and I don't care"
+          "summary_zh": "【stub】文章《AI is eroding my coding skills, and I don't care》来自Flavio Copes，摘要待生成。"
         },
         {
           "title": "AI writes the code. Engineers still have to understand it.",
           "url": "https://sourcegraph.com/blog/big-code-report-2026",
           "source": "Sourcegraph Blog",
           "published_at": "2026-11-16T08:00:00+08:00",
-          "summary_zh": "【stub】Sourcegraph Blog：AI writes the code. Engineers still have to understand…"
+          "summary_zh": "【stub】文章《AI writes the code. Engineers still have to understand it.》来自Sourcegraph Blog，摘要待生成。"
         }
       ]
     },
@@ -82,7 +82,7 @@
           "url": "https://www.anthropic.com/research/coordinated-vulnerability-disclosure-timelines",
           "source": "Anthropic Research",
           "published_at": "2026-11-16T08:00:00+08:00",
-          "summary_zh": "【stub】Anthropic Research：Updating our coordinated vulnerability disclosure po…"
+          "summary_zh": "【stub】文章《Updating our coordinated vulnerability disclosure policy timelines》来自Anthropic Research，摘要待生成。"
         }
       ]
     }
