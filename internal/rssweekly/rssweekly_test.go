@@ -48,6 +48,36 @@ func TestParseOPML(t *testing.T) {
 			},
 			wantCategories: []string{"Data"},
 		},
+		{
+			name: "repeated category names preserve each outline occurrence",
+			opml: `<opml version="2.0"><body>
+  <outline text="Engineering">
+    <outline text="Go Blog" xmlUrl="https://go.dev/blog/feed.atom"/>
+  </outline>
+  <outline text="Engineering">
+    <outline text="Rust Blog" xmlUrl="https://blog.rust-lang.org/feed.xml"/>
+  </outline>
+</body></opml>`,
+			wantFeeds: []Feed{
+				{Category: "Engineering", Source: "Go Blog", XMLURL: "https://go.dev/blog/feed.atom"},
+				{Category: "Engineering", Source: "Rust Blog", XMLURL: "https://blog.rust-lang.org/feed.xml"},
+			},
+			wantCategories: []string{"Engineering", "Engineering"},
+		},
+		{
+			name: "unnamed wrappers retain nearest named category",
+			opml: `<opml version="2.0"><body>
+  <outline text="Engineering">
+    <outline>
+      <outline text="Go Blog" xmlUrl="https://go.dev/blog/feed.atom"/>
+    </outline>
+  </outline>
+</body></opml>`,
+			wantFeeds: []Feed{
+				{Category: "Engineering", Source: "Go Blog", XMLURL: "https://go.dev/blog/feed.atom"},
+			},
+			wantCategories: []string{"Engineering"},
+		},
 	}
 
 	for _, tt := range tests {

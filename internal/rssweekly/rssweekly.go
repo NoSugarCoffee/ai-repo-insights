@@ -94,7 +94,6 @@ func ParseOPML(r io.Reader) ([]Feed, []string, error) {
 
 	var feeds []Feed
 	var categories []string
-	seenCategories := make(map[string]struct{})
 
 	var walk func([]opmlOutline, string)
 	walk = func(outlines []opmlOutline, inheritedCategory string) {
@@ -103,12 +102,9 @@ func ParseOPML(r io.Reader) ([]Feed, []string, error) {
 			name := outlineName(outline)
 			category := inheritedCategory
 			if xmlURL == "" {
-				category = name
-				if category != "" {
-					if _, seen := seenCategories[category]; !seen {
-						categories = append(categories, category)
-						seenCategories[category] = struct{}{}
-					}
+				if name != "" {
+					category = name
+					categories = append(categories, category)
 				}
 			} else {
 				feeds = append(feeds, Feed{
