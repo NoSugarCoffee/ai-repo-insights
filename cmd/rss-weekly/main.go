@@ -62,6 +62,7 @@ func main() {
 		OutDir:    *outDir,
 		Now:       time.Now(),
 		WeekMode:  weekMode,
+		OPMLURL:   *opmlURL,
 	}
 
 	path, err := rsspipeline.Run(context.Background(), deps, logger)

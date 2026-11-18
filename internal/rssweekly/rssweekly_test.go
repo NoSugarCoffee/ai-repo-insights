@@ -237,10 +237,16 @@ func TestBuildDigestPreservesCategoriesAndSortsItemsDescending(t *testing.T) {
 
 	digest := BuildDigest(week, []string{"Engineering", "Empty", "Operations"}, articles, []FailedFeed{{
 		Source: "Broken Feed", XMLURL: "https://example.com/broken.xml", Error: "unavailable",
-	}}, generatedAt)
+	}}, generatedAt, "https://raw.githubusercontent.com/NoSugarCoffee/rss-feeds/main/feeds.opml")
 
 	if digest.Schema != SchemaVersion || digest.ID != week.ID {
 		t.Errorf("BuildDigest() identity = %q, %q, want %q, %q", digest.Schema, digest.ID, SchemaVersion, week.ID)
+	}
+	if digest.WeekStart != "2026-11-09" || digest.WeekEnd != "2026-11-15" {
+		t.Errorf("BuildDigest() week bounds = %q..%q, want 2026-11-09..2026-11-15", digest.WeekStart, digest.WeekEnd)
+	}
+	if digest.OPML != "https://raw.githubusercontent.com/NoSugarCoffee/rss-feeds/main/feeds.opml" {
+		t.Errorf("BuildDigest() opml = %q", digest.OPML)
 	}
 	if digest.GeneratedAt.Location().String() != "Asia/Shanghai" || digest.GeneratedAt.Hour() != 16 {
 		t.Errorf("BuildDigest() generated_at = %v, want Shanghai-normalized time", digest.GeneratedAt)
@@ -269,9 +275,10 @@ func TestWriteDigestWritesContractAndRefusesReplacement(t *testing.T) {
 	digest := Digest{
 		Schema:      SchemaVersion,
 		ID:          "2026-W46",
+		WeekStart:   "2026-11-09",
+		WeekEnd:     "2026-11-15",
 		GeneratedAt: time.Date(2026, 11, 16, 8, 0, 0, 0, shanghai),
-		WeekStart:   time.Date(2026, 11, 9, 0, 0, 0, 0, shanghai),
-		WeekEnd:     time.Date(2026, 11, 16, 0, 0, 0, 0, shanghai),
+		OPML:        "https://raw.githubusercontent.com/NoSugarCoffee/rss-feeds/main/feeds.opml",
 		Groups:      []Group{{Category: "Empty", Items: []Article{}}},
 		FailedFeeds: []FailedFeed{},
 	}
@@ -292,7 +299,7 @@ func TestWriteDigestWritesContractAndRefusesReplacement(t *testing.T) {
 	if err := json.Unmarshal(data, &raw); err != nil {
 		t.Fatalf("written digest is invalid JSON: %v", err)
 	}
-	wantKeys := []string{"schema", "id", "generated_at", "week_start", "week_end", "groups", "failed_feeds"}
+	wantKeys := []string{"schema", "id", "week_start", "week_end", "generated_at", "opml", "groups", "failed_feeds"}
 	if len(raw) != len(wantKeys) {
 		t.Errorf("written keys = %v, want exactly %v", mapKeys(raw), wantKeys)
 	}
@@ -300,6 +307,9 @@ func TestWriteDigestWritesContractAndRefusesReplacement(t *testing.T) {
 		if _, ok := raw[key]; !ok {
 			t.Errorf("written digest missing key %q", key)
 		}
+	}
+	if !strings.Contains(string(data), `"week_start": "2026-11-09"`) || !strings.Contains(string(data), `"week_end": "2026-11-15"`) {
+		t.Errorf("written digest week bounds must be YYYY-MM-DD dates:\n%s", data)
 	}
 	if !strings.Contains(string(data), `"items": []`) || !strings.Contains(string(data), `"failed_feeds": []`) {
 		t.Errorf("written digest must preserve empty arrays:\n%s", data)
@@ -340,4 +350,44 @@ func equalStrings(got, want []string) bool {
 		}
 	}
 	return true
+}
+
+func TestDigestJSONUsesContractFieldNames(t *testing.T) {
+	shanghai := time.FixedZone("Asia/Shanghai", 8*60*60)
+	digest := Digest{
+		Schema:      SchemaVersion,
+		ID:          "2026-W47",
+		WeekStart:   "2026-11-16",
+		WeekEnd:     "2026-11-22",
+		GeneratedAt: time.Date(2026, 11, 18, 12, 0, 0, 0, shanghai),
+		OPML:        "https://raw.githubusercontent.com/NoSugarCoffee/rss-feeds/main/feeds.opml",
+		Groups: []Group{{
+			Category: "Blogs",
+			Items: []Article{{
+				Title:       "Example",
+				URL:         "https://example.com/post",
+				Source:      "Example Blog",
+				PublishedAt: time.Date(2026, 11, 17, 9, 0, 0, 0, shanghai),
+				Summary:     "一句中文要点",
+			}},
+		}},
+		FailedFeeds: []FailedFeed{{
+			Source: "Broken",
+			XMLURL: "https://example.com/broken.xml",
+			Error:  "timeout",
+		}},
+	}
+	data, err := json.Marshal(digest)
+	if err != nil {
+		t.Fatal(err)
+	}
+	raw := string(data)
+	for _, want := range []string{`"summary_zh":"一句中文要点"`, `"xmlUrl":"https://example.com/broken.xml"`, `"published_at":`, `"opml":`} {
+		if !strings.Contains(raw, want) {
+			t.Errorf("digest JSON missing %s in %s", want, raw)
+		}
+	}
+	if strings.Contains(raw, `"summary":`) || strings.Contains(raw, `"xml_url":`) {
+		t.Errorf("digest JSON used unexpected field names: %s", raw)
+	}
 }

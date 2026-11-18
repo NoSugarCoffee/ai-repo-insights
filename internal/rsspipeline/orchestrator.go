@@ -22,12 +22,14 @@ const (
 
 // Deps are injected boundaries for OPML, feed collection, summarization, and output.
 type Deps struct {
-	OPML      func(ctx context.Context) ([]rssweekly.Feed, []string, error)
-	Collect   func(ctx context.Context, feeds []rssweekly.Feed, week rssweekly.Week) ([]rssweekly.Article, []rssweekly.FailedFeed)
-	Summarize func(articles []rssweekly.Article) (map[string]string, error)
-	OutDir    string
-	Now       time.Time
-	WeekMode  rssweekly.WeekMode
+	OPML        func(ctx context.Context) ([]rssweekly.Feed, []string, error)
+	Collect     func(ctx context.Context, feeds []rssweekly.Feed, week rssweekly.Week) ([]rssweekly.Article, []rssweekly.FailedFeed)
+	Summarize   func(articles []rssweekly.Article) (map[string]string, error)
+	OutDir      string
+	Now         time.Time
+	WeekMode    rssweekly.WeekMode
+	OPMLURL     string
+	SummaryMode string
 }
 
 // Run fetches OPML, collects articles for the selected week, optionally summarizes them, and writes the digest.
@@ -62,7 +64,12 @@ func Run(ctx context.Context, deps Deps, logger zerolog.Logger) (string, error) 
 		}
 	}
 
-	digest := rssweekly.BuildDigest(week, categories, articles, failures, deps.Now)
+	opmlURL := deps.OPMLURL
+	if opmlURL == "" {
+		opmlURL = DefaultOPMLURL
+	}
+	digest := rssweekly.BuildDigest(week, categories, articles, failures, deps.Now, opmlURL)
+	digest.SummaryMode = deps.SummaryMode
 	path, err := rssweekly.WriteDigest(deps.OutDir, digest)
 	if err != nil {
 		return "", fmt.Errorf("write digest: %w", err)

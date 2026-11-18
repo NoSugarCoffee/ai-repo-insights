@@ -38,7 +38,7 @@ type Article struct {
 	URL         string    `json:"url"`
 	Source      string    `json:"source"`
 	PublishedAt time.Time `json:"published_at"`
-	Summary     string    `json:"summary"`
+	Summary     string    `json:"summary_zh"`
 	Description string    `json:"-"`
 	Category    string    `json:"-"`
 }
@@ -52,7 +52,7 @@ type Group struct {
 // FailedFeed records a subscription that could not be collected.
 type FailedFeed struct {
 	Source string `json:"source"`
-	XMLURL string `json:"xml_url"`
+	XMLURL string `json:"xmlUrl"`
 	Error  string `json:"error"`
 }
 
@@ -60,9 +60,10 @@ type FailedFeed struct {
 type Digest struct {
 	Schema      string       `json:"schema"`
 	ID          string       `json:"id"`
+	WeekStart   string       `json:"week_start"`
+	WeekEnd     string       `json:"week_end"`
 	GeneratedAt time.Time    `json:"generated_at"`
-	WeekStart   time.Time    `json:"week_start"`
-	WeekEnd     time.Time    `json:"week_end"`
+	OPML        string       `json:"opml"`
 	Groups      []Group      `json:"groups"`
 	FailedFeeds []FailedFeed `json:"failed_feeds"`
 	SummaryMode string       `json:"summary_mode,omitempty"`
@@ -239,7 +240,8 @@ func Collect(ctx context.Context, feeds []Feed, week Week, parser FeedParser) ([
 }
 
 // BuildDigest groups collected articles in logical category order.
-func BuildDigest(week Week, categories []string, articles []Article, failures []FailedFeed, generatedAt time.Time) Digest {
+// week_end is the inclusive Sunday date of the Shanghai week.
+func BuildDigest(week Week, categories []string, articles []Article, failures []FailedFeed, generatedAt time.Time, opmlURL string) Digest {
 	shanghai, err := time.LoadLocation(shanghaiName)
 	if err != nil {
 		shanghai = time.FixedZone(shanghaiName, 8*60*60)
@@ -274,9 +276,10 @@ func BuildDigest(week Week, categories []string, articles []Article, failures []
 	return Digest{
 		Schema:      SchemaVersion,
 		ID:          week.ID,
+		WeekStart:   week.Start.In(shanghai).Format("2006-01-02"),
+		WeekEnd:     week.Start.In(shanghai).AddDate(0, 0, 6).Format("2006-01-02"),
 		GeneratedAt: generatedAt.In(shanghai),
-		WeekStart:   week.Start.In(shanghai),
-		WeekEnd:     week.End.In(shanghai),
+		OPML:        opmlURL,
 		Groups:      groups,
 		FailedFeeds: failures,
 	}

@@ -1,0 +1,92 @@
+{
+  "schema": "rss-weekly/1",
+  "id": "2026-W47",
+  "week_start": "2026-11-16",
+  "week_end": "2026-11-22",
+  "generated_at": "2026-11-18T12:45:52.56272898+08:00",
+  "opml": "https://raw.githubusercontent.com/NoSugarCoffee/rss-feeds/main/feeds.opml",
+  "groups": [
+    {
+      "category": "Blogs",
+      "items": [
+        {
+          "title": "How to use GitHub Copilot CLI: a complete tutorial",
+          "url": "https://flaviocopes.com/copilot-cli/",
+          "source": "Flavio Copes",
+          "published_at": "2026-11-18T02:36:00+08:00",
+          "summary_zh": "【stub】Flavio Copes：How to use GitHub Copilot CLI: a complete tutorial"
+        },
+        {
+          "title": "How to use GPT-6.2 Astra and Sol in Codex and the API",
+          "url": "https://flaviocopes.com/gpt-6-2/",
+          "source": "Flavio Copes",
+          "published_at": "2026-11-18T02:30:00+08:00",
+          "summary_zh": "【stub】Flavio Copes：How to use GPT-6.2 Astra and Sol in Codex and the API"
+        },
+        {
+          "title": "Deterministic Simulation Testing",
+          "url": "https://martinfowler.com/articles/deterministic-simulation-testing.html",
+          "source": "Martin Fowler",
+          "published_at": "2026-11-17T22:33:00+08:00",
+          "summary_zh": "【stub】Martin Fowler：Deterministic Simulation Testing"
+        },
+        {
+          "title": "A deep dive into ChatGPT Sites",
+          "url": "https://flaviocopes.com/chatgpt-sites/",
+          "source": "Flavio Copes",
+          "published_at": "2026-11-17T17:00:00+08:00",
+          "summary_zh": "【stub】Flavio Copes：A deep dive into ChatGPT Sites"
+        },
+        {
+          "title": "How to use OpenCode Browse",
+          "url": "https://flaviocopes.com/opencode-browse/",
+          "source": "Flavio Copes",
+          "published_at": "2026-11-17T16:45:00+08:00",
+          "summary_zh": "【stub】Flavio Copes：How to use OpenCode Browse"
+        },
+        {
+          "title": "Why large monorepos need code search, especially with AI coding agents",
+          "url": "https://sourcegraph.com/blog/monorepo-code-search-ai-coding-agents",
+          "source": "Sourcegraph Blog",
+          "published_at": "2026-11-17T08:00:00+08:00",
+          "summary_zh": "【stub】Sourcegraph Blog：Why large monorepos need code search, especially with …"
+        },
+        {
+          "title": "A deep dive into ChatGPT Wallet",
+          "url": "https://flaviocopes.com/chatgpt-wallet/",
+          "source": "Flavio Copes",
+          "published_at": "2026-11-17T01:10:00+08:00",
+          "summary_zh": "【stub】Flavio Copes：A deep dive into ChatGPT Wallet"
+        },
+        {
+          "title": "AI is eroding my coding skills, and I don't care",
+          "url": "https://flaviocopes.com/ai-eroding-coding-skills/",
+          "source": "Flavio Copes",
+          "published_at": "2026-11-17T00:00:00+08:00",
+          "summary_zh": "【stub】Flavio Copes：AI is eroding my coding skills, and I don't care"
+        },
+        {
+          "title": "AI writes the code. Engineers still have to understand it.",
+          "url": "https://sourcegraph.com/blog/big-code-report-2026",
+          "source": "Sourcegraph Blog",
+          "published_at": "2026-11-16T08:00:00+08:00",
+          "summary_zh": "【stub】Sourcegraph Blog：AI writes the code. Engineers still have to understand…"
+        }
+      ]
+    },
+    {
+      "category": "Labs",
+      "items": [
+        {
+          "title": "Updating our coordinated vulnerability disclosure policy timelines",
+          "url": "https://www.anthropic.com/research/coordinated-vulnerability-disclosure-timelines",
+          "source": "Anthropic Research",
+          "published_at": "2026-11-16T08:00:00+08:00",
+          "summary_zh": "【stub】Anthropic Research：Updating our coordinated vulnerability disclosure po…"
+        }
+      ]
+    }
+  ],
+  "failed_feeds": [],
+  "summary_mode": "stub"
+}
